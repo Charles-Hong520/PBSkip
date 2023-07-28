@@ -46,6 +46,38 @@ struct Seeker {
         return 0;
     }
 
+    void ReadVarint32(uint32_t* i) {
+        *i = 0;
+        uint32_t shift = 0;
+        while (curr < end) {
+            uint32_t b = buffer[curr];
+            curr++;
+            *i |= (b & 0x7f) << shift;
+            if ((b & 0x80) == 0) {
+                return;
+            }
+            shift += 7;
+        }
+        std::cout << "ERROR: ReadVarint32: end is past eof" << std::endl;
+        exit(0);
+    }
+
+    void ReadVarint64(uint64_t* i) {
+        *i = 0;
+        uint32_t shift = 0;
+        while (curr < end) {
+            uint64_t b = buffer[curr];
+            curr++;
+            *i |= (b & 0x7f) << shift;
+            if ((b & 0x80) == 0) {
+                return;
+            }
+            shift += 7;
+        }
+        std::cout << "ERROR: ReadVarint64: end is past eof" << std::endl;
+        exit(0);
+    }
+
     void ReadString(std::string* str, uint32_t len) {
         if (curr + len > end) {
             std::cout << "ERROR: ReadString: end is past eof" << std::endl;
