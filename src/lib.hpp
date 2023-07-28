@@ -45,6 +45,15 @@ struct Seeker {
         }
         return 0;
     }
+
+    void ReadString(std::string* str, uint32_t len) {
+        if (curr + len > end) {
+            std::cout << "ERROR: ReadString: end is past eof" << std::endl;
+            exit(0);
+        }
+        str->assign((char*)buffer + curr, len);
+        curr += len;
+    }
 };
 
 #endif
