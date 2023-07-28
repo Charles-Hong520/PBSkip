@@ -33,17 +33,10 @@ struct Seeker {
     this->curr = start;
     this->buffer = buffer.buffer;  // always 0th index/beg of file
   }
-  uint32_t ReadTag() {
+  inline uint32_t ReadTag() {
     uint32_t tag = 0;
-    if (curr < end) {
-      tag = buffer[curr];
-      if (tag < 0x80) {
-        curr++;
-        return tag;
-      }
-    }
-
-    return 0;
+    if (!ReadVarint32(tag)) return 0;
+    return tag;
   }
 };
 
