@@ -1,6 +1,7 @@
 syntax = "proto3";
 /* 
-protoc --cpp_out=. person.proto 
+run all commands in root "PBSkip"
+protoc --proto_path=src/schema/ --cpp_out=src/schema/ person.proto
 */
 message Address {
   uint32 zipcode = 1;

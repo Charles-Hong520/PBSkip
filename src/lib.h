@@ -1,10 +1,15 @@
-#ifndef __LIB_HPP__
-#define __LIB_HPP__
+#ifndef __LIB_H__
+#define __LIB_H__
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 
 #include <iostream>
+#include <string>
+inline void handle_error(const char* msg) {
+  perror(msg);
+  exit(0);
+}
 
 struct Buffer {
   uint8_t* buffer;
@@ -12,10 +17,21 @@ struct Buffer {
 
   Buffer(std::string& filename) {
     int fd = open(filename.c_str(), O_RDONLY);
-    struct stat st;
-    stat(filename.c_str(), &st);
-    this->size = st.st_size;
-    this->buffer = (uint8_t*)mmap(0, size, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
+    if (fd == -1)
+      handle_error("open");
+
+    // obtain file size
+    struct stat sb;
+    if (fstat(fd, &sb) == -1)
+      handle_error("fstat");
+
+    this->size = sb.st_size;
+
+    this->buffer = static_cast<uint8_t*>(mmap(NULL, this->size, PROT_READ, MAP_PRIVATE, fd, 0u));
+    if (this->buffer == MAP_FAILED)
+      handle_error("mmap");
+
+    // TODO close fd at some point in time, call munmap(...)
   }
 };
 
@@ -26,8 +42,7 @@ struct Seeker {
 
   Seeker(const Buffer& buffer, size_t start, size_t length) {
     if (buffer.size - length < start) {
-      std::cout << "ERROR: Seeker Constructor: end is past eof" << std::endl;
-      exit(0);
+      handle_error("Seeker Constructor");
     }
     this->end = start + length;
     this->curr = start;
@@ -41,12 +56,11 @@ struct Seeker {
       uint32_t b = buffer[curr];
       curr++;
       *i |= (b & 0x7f) << shift;
-      if ((b & 0x80) == 0) {
+      if (b < 0x80) {
         return true;
       }
       shift += 7;
     }
-    std::cout << "ERROR: ReadVarint32: end is past eof" << std::endl;
     return false;
   }
   inline uint32_t ReadTag() {
@@ -72,8 +86,7 @@ struct Seeker {
 
   inline void ReadString(std::string* str, uint32_t len) {
     if (curr + len > end) {
-      std::cout << "ERROR: ReadString: end is past eof" << std::endl;
-      exit(0);
+      handle_error("ReadString: eof");
     }
     str->assign((char*)buffer + curr, len);
     curr += len;

@@ -1,4 +1,5 @@
 #include "person.pbs.h"
+
 void Address::set_zipcode(uint32_t zipcode) {
   this->zipcode = zipcode;
 }
@@ -116,6 +117,40 @@ bool Person::parsePerson(Seeker& seek) {
         }
         break;
     }
+    std::cout << field_id << std::endl;
   }
   return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const Person& p) {
+  os << "Person\n";
+  os << "name: " << p.name << "\n";
+  os << "age: " << p.age << "\n";
+  if (p.address) os << "address: " << *p.address << "\n";
+  os << "names: {\n";
+  for (auto n : p.names) {
+    os << "\t" << n << "\n";
+  }
+  os << "}\n";
+  os << "ages: {\n";
+  for (auto n : p.ages) {
+    os << "\t" << n << "\n";
+  }
+  os << "}\n";
+  os << "addresses: {\n";
+  for (auto n : p.addresses) {
+    os << "\t" << *n << "\n";
+  }
+  os << "}\n";
+  return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const Address& a) {
+  os << "Address\n";
+  os << "zipcode: " << a.zipcode << "\n";
+  os << "international: "
+     << "\n";
+  os << "city: "
+     << "\n";
+  return os;
 }
