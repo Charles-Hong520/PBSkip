@@ -14,11 +14,13 @@ bool Address::parseAddress(Seeker& seek) {
   while (tag != 0) {
     uint32_t field_id = tag >> 3;
     uint32_t wire = tag & 7;
+
     switch (field_id) {
       case 1:  // zipcode
         if (wire == 0) {
-          uint64_t i;
-          seek.ReadVarint64(&i);
+          uint32_t i;
+          std::cout << "seek zipcode: " << seek.curr << "\n";
+          seek.ReadVarint32(&i);
           set_zipcode(i);
         }
         break;
@@ -39,6 +41,7 @@ bool Address::parseAddress(Seeker& seek) {
         }
         break;
     }
+    tag = seek.ReadTag();
   }
   return true;
 }
@@ -66,6 +69,7 @@ bool Person::parsePerson(Seeker& seek) {
   while (tag != 0) {
     uint32_t field_id = tag >> 3;
     uint32_t wire = tag & 7;
+
     switch (field_id) {
       case 1:  // name
         if (wire == 2) {
@@ -100,11 +104,16 @@ bool Person::parsePerson(Seeker& seek) {
           seek.ReadString(&buffer, len);
           add_names(buffer);
         }
+        break;
       case 5:  // repeated ages
-        if (wire == 0) {
-          uint64_t i;
-          seek.ReadVarint64(&i);
-          add_ages(i);
+        if (wire == 2) {
+          uint32_t len;
+          seek.ReadVarint32(&len);
+          while (len--) {
+            uint64_t i;
+            seek.ReadVarint64(&i);
+            add_ages(i);
+          }
         }
         break;
       case 6:  // repeated addresses
@@ -117,6 +126,7 @@ bool Person::parsePerson(Seeker& seek) {
         }
         break;
     }
+    tag = seek.ReadTag();
     std::cout << field_id << std::endl;
   }
   return true;
@@ -148,9 +158,7 @@ std::ostream& operator<<(std::ostream& os, const Person& p) {
 std::ostream& operator<<(std::ostream& os, const Address& a) {
   os << "Address\n";
   os << "zipcode: " << a.zipcode << "\n";
-  os << "international: "
-     << "\n";
-  os << "city: "
-     << "\n";
+  os << "international: " << a.international << "\n";
+  os << "city: " << a.city << "\n";
   return os;
 }

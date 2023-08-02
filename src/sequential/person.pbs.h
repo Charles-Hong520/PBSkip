@@ -13,6 +13,11 @@ class Address {
   std::string city;
 
  public:
+  Address() {
+    zipcode = 0;
+    international = false;
+    city = "";
+  }
   void set_zipcode(uint32_t);
   void set_international(bool);
   void set_city(const std::string&);
@@ -30,6 +35,11 @@ class Person {
   std::vector<Address*> addresses;
 
  public:
+  Person() {
+    name = "";
+    age = 0;
+    address = nullptr;
+  }
   void set_name(const std::string&);
   void set_age(int64_t);
   void set_address(Address*);

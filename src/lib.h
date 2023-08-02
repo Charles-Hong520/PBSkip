@@ -73,15 +73,16 @@ struct Seeker {
     uint32_t shift = 0;
     while (curr < end) {
       uint64_t b = buffer[curr];
+      std::cout << "b: " << b << "\n";
       curr++;
       *i |= (b & 0x7f) << shift;
-      if ((b & 0x80) == 0) {
+      std::cout << "i: " << *i << "\n";
+      if (b < 0x80) {
         return;
       }
       shift += 7;
     }
-    std::cout << "ERROR: ReadVarint64: end is past eof" << std::endl;
-    exit(0);
+    handle_error("ReadVarint64: eof");
   }
 
   inline void ReadString(std::string* str, uint32_t len) {

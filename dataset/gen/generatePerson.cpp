@@ -19,8 +19,8 @@ int main() {
   {
     Person p;
 
-    p.set_name("name");
-    p.set_age(22);
+    // p.set_name("name");
+    // p.set_age(22);
     Address* addr = p.mutable_address();
     p.add_names("multname1");
     p.add_names("multname2");
@@ -29,9 +29,9 @@ int main() {
     Address* addrs1 = p.add_addresses();
     Address* addrs2 = p.add_addresses();
 
+    fillAddress(addrs2, 2);
     fillAddress(addr, 0);
     fillAddress(addrs1, 1);
-    fillAddress(addrs2, 2);
 
     std::string filename = "dataset/person1.bin";
     std::fstream output(filename, std::ios::out | std::ios::trunc | std::ios::binary);
