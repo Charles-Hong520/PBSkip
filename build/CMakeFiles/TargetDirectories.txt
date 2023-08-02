@@ -1,3 +1,0 @@
-/Users/dhruv/Documents/Proto/PBSkip/build/CMakeFiles/test.dir
-/Users/dhruv/Documents/Proto/PBSkip/build/CMakeFiles/edit_cache.dir
-/Users/dhruv/Documents/Proto/PBSkip/build/CMakeFiles/rebuild_cache.dir
