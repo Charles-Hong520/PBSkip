@@ -48,7 +48,11 @@ struct Seeker {
     this->curr = start;
     this->buffer = buffer.buffer;  // always 0th index/beg of file
   }
-
+  Seeker(Seeker& s, size_t length) {
+    this->buffer = s.buffer;
+    this->curr = s.curr;
+    this->end = s.curr + length;
+  }
   bool ReadVarint32(uint32_t* i) {
     *i = 0;
     uint32_t shift = 0;

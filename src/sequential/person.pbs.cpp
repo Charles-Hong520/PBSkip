@@ -92,7 +92,9 @@ bool Person::parsePerson(Seeker& seek) {
           uint32_t len;
           seek.ReadVarint32(&len);
           Address* addr = new Address();
-          addr->parseAddress(seek);
+          Seeker copyseeker(seek, len);
+          seek.curr += len;
+          addr->parseAddress(copyseeker);
           set_address(addr);
         }
         break;
@@ -121,7 +123,10 @@ bool Person::parsePerson(Seeker& seek) {
           uint32_t len;
           seek.ReadVarint32(&len);
           Address* addr = new Address();
-          addr->parseAddress(seek);
+          Seeker copyseeker(seek, len);
+          seek.curr += len;
+
+          addr->parseAddress(copyseeker);
           add_addresses(addr);
         }
         break;
