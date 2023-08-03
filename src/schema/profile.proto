@@ -37,7 +37,7 @@
 //   unique Mapping with that id.
 
 /*
-protoc --cpp_out=. profile.proto 
+protoc --proto_path=src/schema/ --cpp_out=src/schema/ profile.proto
 
 */
 

@@ -79,6 +79,7 @@ def generate_H(classes):
         f.write("#include <vector>\n")
         f.write("#include <iostream>\n")
         f.write('#include "../lib.h"\n')
+        f.write("namespace PBS {\n")
 
         # write the class name and the fields to the .pbs.h file
         for class_name, fields in classes.items():
@@ -183,6 +184,7 @@ def generate_H(classes):
                 f.write(mem)
 
             f.write("};\n")
+        f.write("}\n")
 
         f.write("#endif\n")
     f.close()
@@ -286,6 +288,7 @@ def parseClass(classname, fields):
 def generate_CPP(lines):
     with open("generated/" + filename + ".pbs.cpp", "w") as f:
         f.write('#include "' + filename + '.pbs.h"\n')
+        f.write("namespace PBS {\n")
         classes = {}
         i = 0
         while i < len(lines):
@@ -356,37 +359,39 @@ def generate_CPP(lines):
             i += 1
         # print(classes)
 
-    #                 getter = ""
-    #                 setter = ""
-    #                 for fi in global_classes[class_name]:
-    #                     param = fi["cpp_type"]
-    #                     if param == "std::string":
-    #                         param = "const std::string&"
-    #                     if fi["repeated"]:
-    #                         getter = f"""
-    # std::vector<{fi["cpp_type"]}> {class_name}::get_{fi["var"]}() {{
-    # \treturn this->{fi["var"]};
-    # }}"""
-    #                         setter = f"""
-    # void {class_name}::add_{fi["var"]}({param} from_) {{
-    # \tthis->{fi["var"]}.push_back(from_);
-    # }}
-    # """
-    #                     else:
-    #                         getter = f"""
-    # {fi["cpp_type"]} {class_name}::get_{fi["var"]}() {{
-    # \treturn this->{fi["var"]};
-    # }}"""
-    #                         setter = f"""
-    # void {class_name}::set_{fi["var"]}({param} from_) {{
-    # \tthis->{fi["var"]} = from_;
-    # }}
-    # """
-    #                     f.write(setter)
-    #                     f.write(getter)
-    #                 f.write(parseClass(class_name, global_classes[class_name]))
+        #                 getter = ""
+        #                 setter = ""
+        #                 for fi in global_classes[class_name]:
+        #                     param = fi["cpp_type"]
+        #                     if param == "std::string":
+        #                         param = "const std::string&"
+        #                     if fi["repeated"]:
+        #                         getter = f"""
+        # std::vector<{fi["cpp_type"]}> {class_name}::get_{fi["var"]}() {{
+        # \treturn this->{fi["var"]};
+        # }}"""
+        #                         setter = f"""
+        # void {class_name}::add_{fi["var"]}({param} from_) {{
+        # \tthis->{fi["var"]}.push_back(from_);
+        # }}
+        # """
+        #                     else:
+        #                         getter = f"""
+        # {fi["cpp_type"]} {class_name}::get_{fi["var"]}() {{
+        # \treturn this->{fi["var"]};
+        # }}"""
+        #                         setter = f"""
+        # void {class_name}::set_{fi["var"]}({param} from_) {{
+        # \tthis->{fi["var"]} = from_;
+        # }}
+        # """
+        #                     f.write(setter)
+        #                     f.write(getter)
+        #                 f.write(parseClass(class_name, global_classes[class_name]))
 
-    #             i += 1
+        #             i += 1
+        f.write("}\n")
+
     f.close()
 
 

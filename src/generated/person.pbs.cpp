@@ -1,4 +1,5 @@
 #include "person.pbs.h"
+namespace PBS {
 Address::Address() {
 	zipcode = 0;
 	international = false;
@@ -167,4 +168,5 @@ bool Person::parsePerson(Seeker& seek) {
     tag = seek.ReadTag();
 	}
 	return true;
+}
 }

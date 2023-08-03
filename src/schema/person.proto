@@ -3,6 +3,8 @@ syntax = "proto3";
 run all commands in root "PBSkip"
 protoc --proto_path=src/schema/ --cpp_out=src/schema/ person.proto
 */
+
+
 message Address {
   uint32 zipcode = 1;
   bool international = 2;

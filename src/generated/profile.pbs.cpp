@@ -1,4 +1,5 @@
 #include "profile.pbs.h"
+namespace PBS {
 Profile::Profile() {
 	drop_frames = 0;
 	keep_frames = 0;
@@ -775,4 +776,5 @@ bool Function::parseFunction(Seeker& seek) {
     tag = seek.ReadTag();
 	}
 	return true;
+}
 }

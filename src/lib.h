@@ -77,10 +77,8 @@ struct Seeker {
     uint32_t shift = 0;
     while (curr < end) {
       uint64_t b = buffer[curr];
-      std::cout << "b: " << b << "\n";
       curr++;
       *i |= (b & 0x7f) << shift;
-      std::cout << "i: " << *i << "\n";
       if (b < 0x80) {
         return;
       }

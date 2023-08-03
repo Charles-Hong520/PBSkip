@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "../lib.h"
+namespace PBS {
 class Address {
 private:
 	uint32_t zipcode;
@@ -45,4 +46,5 @@ public:
 	bool parsePerson(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Person&);
 };
+}
 #endif

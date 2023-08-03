@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "../lib.h"
+namespace PBS {
 class Profile {
 private:
 	std::vector<ValueType*> sample_type;
@@ -195,4 +196,5 @@ public:
 	bool parseFunction(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Function&);
 };
+}
 #endif
