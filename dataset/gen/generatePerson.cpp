@@ -20,7 +20,7 @@ int main() {
     Person p;
 
     p.set_name("name");
-    p.set_age(22);
+    p.set_age(-10);
     Address* addr = p.mutable_address();
     p.add_names("multname1");
     p.add_names("multname2");

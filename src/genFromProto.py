@@ -33,6 +33,8 @@ prototype_to_cpptype = {
     "bool": "bool",
     "string": "std::string",
 }
+wire0 = {"uint32", "int32", "uint64", "int64", "bool"}
+wire2 = {"std::string"}
 
 
 def parse_proto_file(lines):
@@ -193,20 +195,81 @@ def read_H_file(file_name):
     return lines
 
 
+def genCase(f):
+    string = ""
+    p_type = f["proto_type"]
+    if p_type in wire0 and not f["repeated"]:
+        bits = "32"
+        if "64" in p_type:
+            bits = "64"
+        string = f"""\t\tcase {f["field_id"]}:
+\t\t\tif (wire == 0) {{
+\t\t\t\tuint{bits}_t i;
+\t\t\t\tseek.ReadVarint{bits}(&i);
+\t\t\t\tset_{f["var"]}(i);
+\t\t\t}}
+\t\t\tbreak;
+"""
+    elif p_type in wire0 and f["repeated"]:
+        bits = "32"
+        if "64" in p_type:
+            bits = "64"
+        string = f"""\t\tcase {f["field_id"]}:
+\t\tif (wire == 2) {{
+\t\t\tuint32_t len;
+\t\t\tseek.ReadVarint32(&len);
+\t\t\tuint{bits}_t i;
+\t\t\twhile (len--) {{
+\t\t\t\tseek.ReadVarint{bits}(&i);
+\t\t\t\tadd_{f["var"]}(i);
+\t\t\t}}
+\t\t}}
+\t\tbreak;
+"""
+    elif p_type == "string":
+        string = f"""\t\tcase {f["field_id"]}:
+\t\tif (wire == 2) {{
+\t\t\tuint32_t len;
+\t\t\tseek.ReadVarint32(&len);
+\t\t\tstd::string buffer;
+\t\t\tseek.ReadString(&buffer, len);
+\t\t\t{"add" if f["repeated"] else "set"}_{f["var"]}(buffer);
+\t\t}}
+\t\tbreak;
+"""
+    elif "*" in f["cpp_type"]:
+        string = f"""\t\tcase {f["field_id"]}:
+\t\tif (wire == 2) {{
+\t\t\tuint32_t len;
+\t\t\tseek.ReadVarint32(&len);
+\t\t\t{f["cpp_type"]} msg_ = new {f["proto_type"]}();
+\t\t\tSeeker copyseeker(seek, len);
+\t\t\tseek.curr += len;
+\t\t\tmsg_->parseAddress(copyseeker);
+\t\t\t{"add" if f["repeated"] else "set"}_{f["var"]}(msg_);
+\t\t}}
+\t\tbreak;
+"""
+    print(string)
+    return string
+
+
 def parseClass(classname, fields):
     # input: {classname: [{'repeated': False, 'proto_type': 'string', 'var': 'name', 'field_id': '1', 'cpp_type': 'std::string'}]}
 
-    string = f"""
-bool {classname}::parse{classname}(Seeker& seek) {{
-    uint32_t tag = seek.ReadTag();
-    while (tag != 0) {{
-        uint32_t field_id = tag >> 3;
-        uint32_t wire = tag & 7;
+    string = f"""bool {classname}::parse{classname}(Seeker& seek) {{
+\tuint32_t tag = seek.ReadTag();
+\twhile (tag != 0) {{
+\t\tuint32_t field_id = tag >> 3;
+\t\tuint32_t wire = tag & 7;
 
-        switch (field_id) {{
-            
-        }}
-    }}    
+\t\tswitch (field_id) {{
+"""
+    for f in fields:
+        string += genCase(f)
+
+    string += f"""\t\t}}
+\t}}
 }}
 """
     return string
@@ -275,7 +338,7 @@ def generate_CPP(lines):
                     f.write("}\n")
                     i += 1
             i += 1
-        print(classes)
+        # print(classes)
 
 
 classes = parse_proto_file(read_proto_file("schema/" + filename + ".proto"))
@@ -283,7 +346,7 @@ generate_H(classes)
 
 generate_CPP(read_H_file(filename))
 
-for key, val in global_classes.items():
-    print(key)
-    for e in val:
-        print("\n", e)
+# for key, val in global_classes.items():
+#     print(key)
+#     for e in val:
+#         print("\n", e)

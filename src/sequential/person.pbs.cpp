@@ -26,8 +26,8 @@ bool Address::parseAddress(Seeker& seek) {
         break;
       case 2:  // international
         if (wire == 0) {
-          uint64_t i;
-          seek.ReadVarint64(&i);
+          uint32_t i;
+          seek.ReadVarint32(&i);
           set_international(i);
         }
         break;
