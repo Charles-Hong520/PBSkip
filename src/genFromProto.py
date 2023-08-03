@@ -8,6 +8,7 @@ import re
 
 filename = "person"
 
+
 def read_proto_file(file_name):
     lines = []
     with open(file_name, "r") as f:
@@ -23,6 +24,17 @@ def read_proto_file(file_name):
 
 # parse the .proto file and return the class name and the fields
 
+global_classes = {}
+prototype_to_cpptype = {
+    "uint32": "uint32_t",
+    "uint64": "uint64_t",
+    "int32": "int32_t",
+    "int64": "int64_t",
+    "bool": "bool",
+    "string": "std::string",
+}
+
+
 def parse_proto_file(lines):
     classes = {}
     i = 0
@@ -31,12 +43,26 @@ def parse_proto_file(lines):
         if line.startswith("message"):
             class_name = line.split(" ")[1].strip()
             fields = []
+            attr = []
             i += 1
             while not lines[i].startswith("}"):
                 fields.append(lines[i].strip())
+                curr = lines[i].strip().split()
+                attr.append({})
+                attr[-1]["repeated"] = curr[0] == "repeated"
+                offset = 1 if attr[-1]["repeated"] else 0
+                attr[-1]["proto_type"] = curr[0 + offset]
+                attr[-1]["var"] = curr[1 + offset]
+                attr[-1]["field_id"] = curr[-1][:-1]
+                if attr[-1]["proto_type"] in prototype_to_cpptype:
+                    attr[-1]["cpp_type"] = prototype_to_cpptype[attr[-1]["proto_type"]]
+                else:
+                    attr[-1]["cpp_type"] = attr[-1]["proto_type"] + "*"
                 i += 1
             classes[class_name] = fields
+            global_classes[class_name] = attr
         i += 1
+    # {classname: [(repeated) type var = field_id]}
     return classes
 
 
@@ -153,6 +179,7 @@ def generate_H(classes):
         f.write("#endif\n")
     f.close()
 
+
 def read_H_file(file_name):
     lines = []
     with open("generated/" + file_name + ".pbs.h", "r") as f:
@@ -165,17 +192,23 @@ def read_H_file(file_name):
     f.close()
     return lines
 
+
+def parseClass(class_dict):
+    # input: {classname: [(repeated) type var = field_id]}
+    return
+
+
 def generate_CPP(lines):
     with open("generated/" + filename + ".pbs.cpp", "w") as f:
         f.write('#include "' + filename + '.pbs.h"\n')
         classes = {}
         i = 0
         while i < len(lines):
-            if(lines[i].startswith("class")):
+            if lines[i].startswith("class"):
                 class_name = lines[i].split(" ")[1].strip()
                 classes[class_name] = []
                 i += 1
-                if(lines[i].startswith("private:")): 
+                if lines[i].startswith("private:"):
                     i += 1
                 while not lines[i].startswith("public:"):
                     type_name = lines[i].split(" ")[0].strip()
@@ -183,13 +216,13 @@ def generate_CPP(lines):
                     name = name[:-1]
                     classes[class_name].append((type_name, name))
                     i += 1
-                if(lines[i].startswith("public:")): 
+                if lines[i].startswith("public:"):
                     i += 1
-                f.write(class_name + "::" +class_name+ "() {\n")
+                f.write(class_name + "::" + class_name + "() {\n")
                 temp = ""
                 for type_name, name in classes[class_name]:
                     if type_name == "std::string":
-                        temp = "\"\";\n"
+                        temp = '"";\n'
                     elif (
                         type_name == "int32_t"
                         or type_name == "int64_t"
@@ -209,7 +242,7 @@ def generate_CPP(lines):
                         i += 1
                         continue
                     elif f"parse{class_name}" in lines[i]:
-                        #TODO: parse function
+                        # TODO: parse function
                         i += 1
                         continue
                     lines[i] = lines[i].split(" ")
@@ -217,20 +250,24 @@ def generate_CPP(lines):
                     lines[i] = " ".join(lines[i])
                     l = lines[i].find("_")
                     r = lines[i].find("(")
-                    var = lines[i][l+1:r]
+                    var = lines[i][l + 1 : r]
                     lines[i] = lines[i][:-2] + " " + var + ") {\n"
                     f.write(lines[i])
                     if lines[i].startswith(f"void {class_name}::add"):
-                        f.write("\t" + "this->"+ var + ".push_back(" + var + ");\n")
+                        f.write("\t" + "this->" + var + ".push_back(" + var + ");\n")
                     elif lines[i].startswith(f"void {class_name}::set"):
-                        f.write("\t" + "this->"+ var + " = " + var + ";\n")
+                        f.write("\t" + "this->" + var + " = " + var + ";\n")
                     f.write("}\n")
                     i += 1
             i += 1
         print(classes)
+
 
 classes = parse_proto_file(read_proto_file("schema/" + filename + ".proto"))
 generate_H(classes)
 
 generate_CPP(read_H_file(filename))
 
+for key, val in global_classes.items():
+    for e in val:
+        print("\n", e)
