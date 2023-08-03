@@ -6,7 +6,7 @@ import re
 
 # read the .proto file as lines
 
-filename = "person"
+filename = "profile"
 
 
 def read_proto_file(file_name):
@@ -55,7 +55,7 @@ def parse_proto_file(lines):
                 offset = 1 if attr[-1]["repeated"] else 0
                 attr[-1]["proto_type"] = curr[0 + offset]
                 attr[-1]["var"] = curr[1 + offset]
-                attr[-1]["field_id"] = curr[-1][:-1]
+                attr[-1]["field_id"] = curr[3 + offset][:-1]
                 if attr[-1]["proto_type"] in prototype_to_cpptype:
                     attr[-1]["cpp_type"] = prototype_to_cpptype[attr[-1]["proto_type"]]
                 else:
@@ -245,12 +245,12 @@ def genCase(f):
 \t\t\t{f["cpp_type"]} msg_ = new {f["proto_type"]}();
 \t\t\tSeeker copyseeker(seek, len);
 \t\t\tseek.curr += len;
-\t\t\tmsg_->parseAddress(copyseeker);
+\t\t\tmsg_->parse{f["proto_type"]}(copyseeker);
 \t\t\t{"add" if f["repeated"] else "set"}_{f["var"]}(msg_);
 \t\t}}
 \t\tbreak;
 """
-    print(string)
+    # print(string)
     return string
 
 
@@ -269,7 +269,9 @@ def parseClass(classname, fields):
         string += genCase(f)
 
     string += f"""\t\t}}
+    tag = seek.ReadTag();
 \t}}
+\treturn true;
 }}
 """
     return string

@@ -125,7 +125,6 @@ bool Person::parsePerson(Seeker& seek) {
           Address* addr = new Address();
           Seeker copyseeker(seek, len);
           seek.curr += len;
-
           addr->parseAddress(copyseeker);
           add_addresses(addr);
         }

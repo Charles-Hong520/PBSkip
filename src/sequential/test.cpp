@@ -13,5 +13,5 @@ int main() {
   }
   std::cout << "\n";
   p.parsePerson(seeker);
-  std::cout << p << std::endl;
+  // std::cout << p << std::endl;
 }

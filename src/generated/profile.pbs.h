@@ -21,15 +21,7 @@ private:
 	std::vector<int64_t> comment;
 	int64_t default_sample_type;
 public:
-	Profile() {
-		drop_frames = 0;
-		keep_frames = 0;
-		time_nanos = 0;
-		duration_nanos = 0;
-		period_type = 0;
-		period = 0;
-		default_sample_type = 0;
-	}
+	Profile();
 	void add_sample_type(ValueType*);
 	void add_sample(Sample*);
 	void add_mapping(Mapping*);
@@ -45,21 +37,18 @@ public:
 	void add_comment(int64_t);
 	void set_default_sample_type(int64_t);
 	bool parseProfile(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Profile& p);
+	friend std::ostream& operator<<(std::ostream& os, const Profile&);
 };
 class ValueType {
 private:
 	int64_t type;
 	int64_t unit;
 public:
-	ValueType() {
-		type = 0;
-		unit = 0;
-	}
+	ValueType();
 	void set_type(int64_t);
 	void set_unit(int64_t);
 	bool parseValueType(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const ValueType& v);
+	friend std::ostream& operator<<(std::ostream& os, const ValueType&);
 };
 class Sample {
 private:
@@ -67,13 +56,12 @@ private:
 	std::vector<int64_t> value;
 	std::vector<Label*> label;
 public:
-	Sample() {
-	}
+	Sample();
 	void add_location_id(uint64_t);
 	void add_value(int64_t);
 	void add_label(Label*);
 	bool parseSample(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Sample& s);
+	friend std::ostream& operator<<(std::ostream& os, const Sample&);
 };
 class Label {
 private:
@@ -82,18 +70,13 @@ private:
 	int64_t num;
 	int64_t num_unit;
 public:
-	Label() {
-		key = 0;
-		str = 0;
-		num = 0;
-		num_unit = 0;
-	}
+	Label();
 	void set_key(int64_t);
 	void set_str(int64_t);
 	void set_num(int64_t);
 	void set_num_unit(int64_t);
 	bool parseLabel(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Label& l);
+	friend std::ostream& operator<<(std::ostream& os, const Label&);
 };
 class Mapping {
 private:
@@ -108,18 +91,7 @@ private:
 	bool has_line_numbers;
 	bool has_inline_frames;
 public:
-	Mapping() {
-		id = 0;
-		memory_start = 0;
-		memory_limit = 0;
-		file_offset = 0;
-		filename = 0;
-		build_id = 0;
-		has_functions = false;
-		has_filenames = false;
-		has_line_numbers = false;
-		has_inline_frames = false;
-	}
+	Mapping();
 	void set_id(uint64_t);
 	void set_memory_start(uint64_t);
 	void set_memory_limit(uint64_t);
@@ -131,7 +103,7 @@ public:
 	void set_has_line_numbers(bool);
 	void set_has_inline_frames(bool);
 	bool parseMapping(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Mapping& m);
+	friend std::ostream& operator<<(std::ostream& os, const Mapping&);
 };
 class Location {
 private:
@@ -141,33 +113,25 @@ private:
 	std::vector<Line*> line;
 	bool is_folded;
 public:
-	Location() {
-		id = 0;
-		mapping_id = 0;
-		address = 0;
-		is_folded = false;
-	}
+	Location();
 	void set_id(uint64_t);
 	void set_mapping_id(uint64_t);
 	void set_address(uint64_t);
 	void add_line(Line*);
 	void set_is_folded(bool);
 	bool parseLocation(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Location& l);
+	friend std::ostream& operator<<(std::ostream& os, const Location&);
 };
 class Line {
 private:
 	uint64_t function_id;
 	int64_t line;
 public:
-	Line() {
-		function_id = 0;
-		line = 0;
-	}
+	Line();
 	void set_function_id(uint64_t);
 	void set_line(int64_t);
 	bool parseLine(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Line& l);
+	friend std::ostream& operator<<(std::ostream& os, const Line&);
 };
 class Function {
 private:
@@ -177,19 +141,13 @@ private:
 	int64_t filename;
 	int64_t start_line;
 public:
-	Function() {
-		id = 0;
-		name = 0;
-		system_name = 0;
-		filename = 0;
-		start_line = 0;
-	}
+	Function();
 	void set_id(uint64_t);
 	void set_name(int64_t);
 	void set_system_name(int64_t);
 	void set_filename(int64_t);
 	void set_start_line(int64_t);
 	bool parseFunction(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Function& f);
+	friend std::ostream& operator<<(std::ostream& os, const Function&);
 };
 #endif

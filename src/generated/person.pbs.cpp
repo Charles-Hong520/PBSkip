@@ -44,7 +44,9 @@ bool Address::parseAddress(Seeker& seek) {
 		}
 		break;
 		}
+    tag = seek.ReadTag();
 	}
+	return true;
 }
 Person::Person() {
 	name = "";
@@ -103,7 +105,7 @@ bool Person::parsePerson(Seeker& seek) {
 			set_address(msg_);
 		}
 		break;
-		case 4:
+		case :
 		if (wire == 2) {
 			uint32_t len;
 			seek.ReadVarint32(&len);
@@ -112,7 +114,7 @@ bool Person::parsePerson(Seeker& seek) {
 			add_names(buffer);
 		}
 		break;
-		case 5:
+		case :
 		if (wire == 2) {
 			uint32_t len;
 			seek.ReadVarint32(&len);
@@ -123,7 +125,7 @@ bool Person::parsePerson(Seeker& seek) {
 			}
 		}
 		break;
-		case 6:
+		case :
 		if (wire == 2) {
 			uint32_t len;
 			seek.ReadVarint32(&len);
@@ -135,5 +137,7 @@ bool Person::parsePerson(Seeker& seek) {
 		}
 		break;
 		}
+    tag = seek.ReadTag();
 	}
+	return true;
 }
