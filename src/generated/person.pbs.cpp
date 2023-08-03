@@ -7,11 +7,17 @@ Address::Address() {
 void Address::set_zipcode(uint32_t zipcode) {
 	this->zipcode = zipcode;
 }
+uint32_t Address::get_zipcode( t Address::get_zipcode) {
+}
 void Address::set_international(bool international) {
 	this->international = international;
 }
+bool Address::get_international( international) {
+}
 void Address::set_city(const std::string& city) {
 	this->city = city;
+}
+std::string Address::get_city( city) {
 }
 bool Address::parseAddress(Seeker& seek) {
 	uint32_t tag = seek.ReadTag();
@@ -56,20 +62,32 @@ Person::Person() {
 void Person::set_name(const std::string& name) {
 	this->name = name;
 }
+std::string Person::get_name( name) {
+}
 void Person::set_age(int64_t age) {
 	this->age = age;
+}
+int64_t Person::get_age( t Person::get_age) {
 }
 void Person::set_address(Address* address) {
 	this->address = address;
 }
+Address* Person::get_address( address) {
+}
 void Person::add_names(const std::string& names) {
 	this->names.push_back(names);
+}
+std::vector<std::string> Person::get_names( names) {
 }
 void Person::add_ages(uint64_t ages) {
 	this->ages.push_back(ages);
 }
+std::vector<uint64_t> Person::get_ages( t> Person::get_ages) {
+}
 void Person::add_addresses(Address* addresses) {
 	this->addresses.push_back(addresses);
+}
+std::vector<Address*> Person::get_addresses( addresses) {
 }
 bool Person::parsePerson(Seeker& seek) {
 	uint32_t tag = seek.ReadTag();
@@ -105,7 +123,7 @@ bool Person::parsePerson(Seeker& seek) {
 			set_address(msg_);
 		}
 		break;
-		case :
+		case 4:
 		if (wire == 2) {
 			uint32_t len;
 			seek.ReadVarint32(&len);
@@ -114,7 +132,7 @@ bool Person::parsePerson(Seeker& seek) {
 			add_names(buffer);
 		}
 		break;
-		case :
+		case 5:
 		if (wire == 2) {
 			uint32_t len;
 			seek.ReadVarint32(&len);
@@ -125,7 +143,7 @@ bool Person::parsePerson(Seeker& seek) {
 			}
 		}
 		break;
-		case :
+		case 6:
 		if (wire == 2) {
 			uint32_t len;
 			seek.ReadVarint32(&len);

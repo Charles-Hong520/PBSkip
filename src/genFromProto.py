@@ -6,7 +6,7 @@ import re
 
 # read the .proto file as lines
 
-filename = "profile"
+filename = "person"
 
 
 def read_proto_file(file_name):
@@ -150,6 +150,7 @@ def generate_H(classes):
                         public_members.append(
                             "\tvoid add_" + member[1] + "(" + member[0] + ");\n"
                         )
+                    public_members.append( "\tstd::vector<" + member[0] + "> get_" + member[1] + "();\n")
                 else:
                     private_members.append("\t" + member[0] + " " + member[1] + ";\n")
                     if member[0] == "std::string":
@@ -160,6 +161,7 @@ def generate_H(classes):
                         public_members.append(
                             "\tvoid set_" + member[1] + "(" + member[0] + ");\n"
                         )
+                    public_members.append("\t" + member[0] + " get_" + member[1] + "();\n")
 
             # write private and public members to the file
             f.write("private:\n")
