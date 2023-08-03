@@ -6,8 +6,7 @@ import re
 
 # read the .proto file as lines
 
-filename = "profile"
-
+filename = "person"
 
 def read_proto_file(file_name):
     lines = []
@@ -18,11 +17,11 @@ def read_proto_file(file_name):
             if not line or line.startswith("//"):
                 continue
             lines.append(line)
+    f.close()
     return lines
 
 
 # parse the .proto file and return the class name and the fields
-
 
 def parse_proto_file(lines):
     classes = {}
@@ -92,24 +91,24 @@ def generate_H(classes):
             private_members = []
             public_members = []
             temp_string = "const std::string&"
-            public_members.append("\t" + class_name + "() {\n")
-            for member in members:
-                if member[0] == "std::string":
-                    temp = '"";\n'
-                elif (
-                    member[0] == "int32_t"
-                    or member[0] == "int64_t"
-                    or member[0] == "uint32_t"
-                    or member[0] == "uint64_t"
-                ):
-                    temp = "0;\n"
-                elif member[0] == "bool":
-                    temp = "false;\n"
-                elif member[0] == class_name + "*":
-                    temp = "nullptr;\n"
-                if member[2] == False:
-                    public_members.append("\t\t" + member[1] + " = " + temp)
-            public_members.append("\t}\n")
+            public_members.append("\t" + class_name + "();\n")
+            # for member in members:
+            #     if member[0] == "std::string":
+            #         temp = '"";\n'
+            #     elif (
+            #         member[0] == "int32_t"
+            #         or member[0] == "int64_t"
+            #         or member[0] == "uint32_t"
+            #         or member[0] == "uint64_t"
+            #     ):
+            #         temp = "0;\n"
+            #     elif member[0] == "bool":
+            #         temp = "false;\n"
+            #     elif member[0] == class_name + "*":
+            #         temp = "nullptr;\n"
+            #     if member[2] == False:
+            #         public_members.append("\t\t" + member[1] + " = " + temp)
+            # public_members.append("\t}\n")
             for member in members:
                 if member[2] == True:
                     private_members.append(
@@ -143,8 +142,7 @@ def generate_H(classes):
             public_members.append(
                 "\tfriend std::ostream& operator<<(std::ostream& os, const "
                 + class_name
-                + "& "
-                + class_name.lower()[0]
+                + "&"
                 + ");\n"
             )
             for mem in public_members:
@@ -153,7 +151,86 @@ def generate_H(classes):
             f.write("};\n")
 
         f.write("#endif\n")
+    f.close()
 
+def read_H_file(file_name):
+    lines = []
+    with open("generated/" + file_name + ".pbs.h", "r") as f:
+        file = f.readlines()
+        for line in file:
+            line = line.strip()
+            if not line or line.startswith("//"):
+                continue
+            lines.append(line)
+    f.close()
+    return lines
+
+def generate_CPP(lines):
+    with open("generated/" + filename + ".pbs.cpp", "w") as f:
+        f.write('#include "' + filename + '.pbs.h"\n')
+        classes = {}
+        i = 0
+        while i < len(lines):
+            if(lines[i].startswith("class")):
+                class_name = lines[i].split(" ")[1].strip()
+                classes[class_name] = []
+                i += 1
+                if(lines[i].startswith("private:")): 
+                    i += 1
+                while not lines[i].startswith("public:"):
+                    type_name = lines[i].split(" ")[0].strip()
+                    name = lines[i].split(" ")[1].strip()
+                    name = name[:-1]
+                    classes[class_name].append((type_name, name))
+                    i += 1
+                if(lines[i].startswith("public:")): 
+                    i += 1
+                f.write(class_name + "::" +class_name+ "() {\n")
+                temp = ""
+                for type_name, name in classes[class_name]:
+                    if type_name == "std::string":
+                        temp = "\"\";\n"
+                    elif (
+                        type_name == "int32_t"
+                        or type_name == "int64_t"
+                        or type_name == "uint32_t"
+                        or type_name == "uint64_t"
+                    ):
+                        temp = "0;\n"
+                    elif type_name == "bool":
+                        temp = "false;\n"
+                    elif "*" in type_name:
+                        temp = "nullptr;\n"
+                    if not type_name.startswith("std::vector"):
+                        f.write("\t" + name + " = " + temp)
+                f.write("}\n")
+                while not lines[i].startswith("};"):
+                    if lines[i].startswith(class_name) or lines[i].startswith("friend"):
+                        i += 1
+                        continue
+                    elif f"parse{class_name}" in lines[i]:
+                        #TODO: parse function
+                        i += 1
+                        continue
+                    lines[i] = lines[i].split(" ")
+                    lines[i][1] = class_name + "::" + lines[i][1]
+                    lines[i] = " ".join(lines[i])
+                    l = lines[i].find("_")
+                    r = lines[i].find("(")
+                    var = lines[i][l+1:r]
+                    lines[i] = lines[i][:-2] + " " + var + ") {\n"
+                    f.write(lines[i])
+                    if lines[i].startswith(f"void {class_name}::add"):
+                        f.write("\t" + "this->"+ var + ".push_back(" + var + ");\n")
+                    elif lines[i].startswith(f"void {class_name}::set"):
+                        f.write("\t" + "this->"+ var + " = " + var + ";\n")
+                    f.write("}\n")
+                    i += 1
+            i += 1
+        print(classes)
 
 classes = parse_proto_file(read_proto_file("schema/" + filename + ".proto"))
 generate_H(classes)
+
+generate_CPP(read_H_file(filename))
+

@@ -10,16 +10,12 @@ private:
 	bool international;
 	std::string city;
 public:
-	Address() {
-		zipcode = 0;
-		international = false;
-		city = "";
-	}
+	Address();
 	void set_zipcode(uint32_t);
 	void set_international(bool);
 	void set_city(const std::string&);
 	bool parseAddress(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Address& a);
+	friend std::ostream& operator<<(std::ostream& os, const Address&);
 };
 class Person {
 private:
@@ -30,11 +26,7 @@ private:
 	std::vector<uint64_t> ages;
 	std::vector<Address*> addresses;
 public:
-	Person() {
-		name = "";
-		age = 0;
-		address = 0;
-	}
+	Person();
 	void set_name(const std::string&);
 	void set_age(int64_t);
 	void set_address(Address*);
@@ -42,6 +34,6 @@ public:
 	void add_ages(uint64_t);
 	void add_addresses(Address*);
 	bool parsePerson(Seeker&);
-	friend std::ostream& operator<<(std::ostream& os, const Person& p);
+	friend std::ostream& operator<<(std::ostream& os, const Person&);
 };
 #endif
