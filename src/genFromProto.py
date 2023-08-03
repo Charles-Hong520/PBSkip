@@ -193,9 +193,23 @@ def read_H_file(file_name):
     return lines
 
 
-def parseClass(class_dict):
-    # input: {classname: [(repeated) type var = field_id]}
-    return
+def parseClass(classname, fields):
+    # input: {classname: [{'repeated': False, 'proto_type': 'string', 'var': 'name', 'field_id': '1', 'cpp_type': 'std::string'}]}
+
+    string = f"""
+bool {classname}::parse{classname}(Seeker& seek) {{
+    uint32_t tag = seek.ReadTag();
+    while (tag != 0) {{
+        uint32_t field_id = tag >> 3;
+        uint32_t wire = tag & 7;
+
+        switch (field_id) {{
+            
+        }}
+    }}    
+}}
+"""
+    return string
 
 
 def generate_CPP(lines):
@@ -243,6 +257,7 @@ def generate_CPP(lines):
                         continue
                     elif f"parse{class_name}" in lines[i]:
                         # TODO: parse function
+                        f.write(parseClass(class_name, global_classes[class_name]))
                         i += 1
                         continue
                     lines[i] = lines[i].split(" ")
@@ -269,5 +284,6 @@ generate_H(classes)
 generate_CPP(read_H_file(filename))
 
 for key, val in global_classes.items():
+    print(key)
     for e in val:
         print("\n", e)
