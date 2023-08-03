@@ -150,7 +150,9 @@ def generate_H(classes):
                         public_members.append(
                             "\tvoid add_" + member[1] + "(" + member[0] + ");\n"
                         )
-                    public_members.append( "\tstd::vector<" + member[0] + "> get_" + member[1] + "();\n")
+                    public_members.append(
+                        "\tstd::vector<" + member[0] + "> get_" + member[1] + "();\n"
+                    )
                 else:
                     private_members.append("\t" + member[0] + " " + member[1] + ";\n")
                     if member[0] == "std::string":
@@ -161,7 +163,9 @@ def generate_H(classes):
                         public_members.append(
                             "\tvoid set_" + member[1] + "(" + member[0] + ");\n"
                         )
-                    public_members.append("\t" + member[0] + " get_" + member[1] + "();\n")
+                    public_members.append(
+                        "\t" + member[0] + " get_" + member[1] + "();\n"
+                    )
 
             # write private and public members to the file
             f.write("private:\n")
@@ -351,6 +355,39 @@ def generate_CPP(lines):
                     i += 1
             i += 1
         # print(classes)
+
+    #                 getter = ""
+    #                 setter = ""
+    #                 for fi in global_classes[class_name]:
+    #                     param = fi["cpp_type"]
+    #                     if param == "std::string":
+    #                         param = "const std::string&"
+    #                     if fi["repeated"]:
+    #                         getter = f"""
+    # std::vector<{fi["cpp_type"]}> {class_name}::get_{fi["var"]}() {{
+    # \treturn this->{fi["var"]};
+    # }}"""
+    #                         setter = f"""
+    # void {class_name}::add_{fi["var"]}({param} from_) {{
+    # \tthis->{fi["var"]}.push_back(from_);
+    # }}
+    # """
+    #                     else:
+    #                         getter = f"""
+    # {fi["cpp_type"]} {class_name}::get_{fi["var"]}() {{
+    # \treturn this->{fi["var"]};
+    # }}"""
+    #                         setter = f"""
+    # void {class_name}::set_{fi["var"]}({param} from_) {{
+    # \tthis->{fi["var"]} = from_;
+    # }}
+    # """
+    #                     f.write(setter)
+    #                     f.write(getter)
+    #                 f.write(parseClass(class_name, global_classes[class_name]))
+
+    #             i += 1
+    f.close()
 
 
 classes = parse_proto_file(read_proto_file("schema/" + filename + ".proto"))
