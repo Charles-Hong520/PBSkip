@@ -7,17 +7,20 @@ Address::Address() {
 void Address::set_zipcode(uint32_t zipcode) {
 	this->zipcode = zipcode;
 }
-uint32_t Address::get_zipcode( t Address::get_zipcode) {
+uint32_t Address::get_zipcode() {
+	return this->zipcode;
 }
 void Address::set_international(bool international) {
 	this->international = international;
 }
-bool Address::get_international( international) {
+bool Address::get_international() {
+	return this->international;
 }
 void Address::set_city(const std::string& city) {
 	this->city = city;
 }
-std::string Address::get_city( city) {
+std::string Address::get_city() {
+	return this->city;
 }
 bool Address::parseAddress(Seeker& seek) {
 	uint32_t tag = seek.ReadTag();
@@ -62,32 +65,38 @@ Person::Person() {
 void Person::set_name(const std::string& name) {
 	this->name = name;
 }
-std::string Person::get_name( name) {
+std::string Person::get_name() {
+	return this->name;
 }
 void Person::set_age(int64_t age) {
 	this->age = age;
 }
-int64_t Person::get_age( t Person::get_age) {
+int64_t Person::get_age() {
+	return this->age;
 }
 void Person::set_address(Address* address) {
 	this->address = address;
 }
-Address* Person::get_address( address) {
+Address* Person::get_address() {
+	return this->address;
 }
 void Person::add_names(const std::string& names) {
 	this->names.push_back(names);
 }
-std::vector<std::string> Person::get_names( names) {
+std::vector<std::string> Person::get_names() {
+	return this->names;
 }
 void Person::add_ages(uint64_t ages) {
 	this->ages.push_back(ages);
 }
-std::vector<uint64_t> Person::get_ages( t> Person::get_ages) {
+std::vector<uint64_t> Person::get_ages() {
+	return this->ages;
 }
 void Person::add_addresses(Address* addresses) {
 	this->addresses.push_back(addresses);
 }
-std::vector<Address*> Person::get_addresses( addresses) {
+std::vector<Address*> Person::get_addresses() {
+	return this->addresses;
 }
 bool Person::parsePerson(Seeker& seek) {
 	uint32_t tag = seek.ReadTag();

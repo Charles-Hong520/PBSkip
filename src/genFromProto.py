@@ -6,7 +6,7 @@ import re
 
 # read the .proto file as lines
 
-filename = "person"
+filename = "profile"
 
 
 def read_proto_file(file_name):
@@ -333,12 +333,20 @@ def generate_CPP(lines):
                     l = lines[i].find("_")
                     r = lines[i].find("(")
                     var = lines[i][l + 1 : r]
-                    lines[i] = lines[i][:-2] + " " + var + ") {\n"
+                    if "get_" in lines[i]:
+                        lines[i] = lines[i][:-2] + ") {\n"
+                    else:
+                        lines[i] = lines[i][:-2] + " " + var + ") {\n"
                     f.write(lines[i])
                     if lines[i].startswith(f"void {class_name}::add"):
                         f.write("\t" + "this->" + var + ".push_back(" + var + ");\n")
                     elif lines[i].startswith(f"void {class_name}::set"):
                         f.write("\t" + "this->" + var + " = " + var + ";\n")
+                    elif f"{class_name}::get_" in lines[i]:
+                        l = lines[i].find("get_")
+                        r = lines[i].find("(")
+                        var = lines[i][l + 4 : r]
+                        f.write("\t" + "return this->" + var + ";\n")
                     f.write("}\n")
                     i += 1
             i += 1

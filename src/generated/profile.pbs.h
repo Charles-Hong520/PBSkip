@@ -23,19 +23,33 @@ private:
 public:
 	Profile();
 	void add_sample_type(ValueType*);
+	std::vector<ValueType*> get_sample_type();
 	void add_sample(Sample*);
+	std::vector<Sample*> get_sample();
 	void add_mapping(Mapping*);
+	std::vector<Mapping*> get_mapping();
 	void add_location(Location*);
+	std::vector<Location*> get_location();
 	void add_function(Function*);
+	std::vector<Function*> get_function();
 	void add_string_table(const std::string&);
+	std::vector<std::string> get_string_table();
 	void set_drop_frames(int64_t);
+	int64_t get_drop_frames();
 	void set_keep_frames(int64_t);
+	int64_t get_keep_frames();
 	void set_time_nanos(int64_t);
+	int64_t get_time_nanos();
 	void set_duration_nanos(int64_t);
+	int64_t get_duration_nanos();
 	void set_period_type(ValueType*);
+	ValueType* get_period_type();
 	void set_period(int64_t);
+	int64_t get_period();
 	void add_comment(int64_t);
+	std::vector<int64_t> get_comment();
 	void set_default_sample_type(int64_t);
+	int64_t get_default_sample_type();
 	bool parseProfile(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Profile&);
 };
@@ -46,7 +60,9 @@ private:
 public:
 	ValueType();
 	void set_type(int64_t);
+	int64_t get_type();
 	void set_unit(int64_t);
+	int64_t get_unit();
 	bool parseValueType(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const ValueType&);
 };
@@ -58,8 +74,11 @@ private:
 public:
 	Sample();
 	void add_location_id(uint64_t);
+	std::vector<uint64_t> get_location_id();
 	void add_value(int64_t);
+	std::vector<int64_t> get_value();
 	void add_label(Label*);
+	std::vector<Label*> get_label();
 	bool parseSample(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Sample&);
 };
@@ -72,9 +91,13 @@ private:
 public:
 	Label();
 	void set_key(int64_t);
+	int64_t get_key();
 	void set_str(int64_t);
+	int64_t get_str();
 	void set_num(int64_t);
+	int64_t get_num();
 	void set_num_unit(int64_t);
+	int64_t get_num_unit();
 	bool parseLabel(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Label&);
 };
@@ -93,15 +116,25 @@ private:
 public:
 	Mapping();
 	void set_id(uint64_t);
+	uint64_t get_id();
 	void set_memory_start(uint64_t);
+	uint64_t get_memory_start();
 	void set_memory_limit(uint64_t);
+	uint64_t get_memory_limit();
 	void set_file_offset(uint64_t);
+	uint64_t get_file_offset();
 	void set_filename(int64_t);
+	int64_t get_filename();
 	void set_build_id(int64_t);
+	int64_t get_build_id();
 	void set_has_functions(bool);
+	bool get_has_functions();
 	void set_has_filenames(bool);
+	bool get_has_filenames();
 	void set_has_line_numbers(bool);
+	bool get_has_line_numbers();
 	void set_has_inline_frames(bool);
+	bool get_has_inline_frames();
 	bool parseMapping(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Mapping&);
 };
@@ -115,10 +148,15 @@ private:
 public:
 	Location();
 	void set_id(uint64_t);
+	uint64_t get_id();
 	void set_mapping_id(uint64_t);
+	uint64_t get_mapping_id();
 	void set_address(uint64_t);
+	uint64_t get_address();
 	void add_line(Line*);
+	std::vector<Line*> get_line();
 	void set_is_folded(bool);
+	bool get_is_folded();
 	bool parseLocation(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Location&);
 };
@@ -129,7 +167,9 @@ private:
 public:
 	Line();
 	void set_function_id(uint64_t);
+	uint64_t get_function_id();
 	void set_line(int64_t);
+	int64_t get_line();
 	bool parseLine(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Line&);
 };
@@ -143,10 +183,15 @@ private:
 public:
 	Function();
 	void set_id(uint64_t);
+	uint64_t get_id();
 	void set_name(int64_t);
+	int64_t get_name();
 	void set_system_name(int64_t);
+	int64_t get_system_name();
 	void set_filename(int64_t);
+	int64_t get_filename();
 	void set_start_line(int64_t);
+	int64_t get_start_line();
 	bool parseFunction(Seeker&);
 	friend std::ostream& operator<<(std::ostream& os, const Function&);
 };
