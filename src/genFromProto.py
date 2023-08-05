@@ -83,6 +83,8 @@ def generate_H(classes):
 
         # write the class name and the fields to the .pbs.h file
         for class_name, fields in classes.items():
+            f.write(f"class {class_name};\n")
+        for class_name, fields in classes.items():
             f.write("class " + class_name + " {\n")
             field_type = ""
             field_name = ""
@@ -292,7 +294,7 @@ def generate_CPP(lines):
         classes = {}
         i = 0
         while i < len(lines):
-            if lines[i].startswith("class"):
+            if lines[i].startswith("class") and "{" in lines[i]:
                 class_name = lines[i].split(" ")[1].strip()
                 classes[class_name] = []
                 i += 1

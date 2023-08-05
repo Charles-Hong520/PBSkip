@@ -5,6 +5,14 @@
 #include <iostream>
 #include "../lib.h"
 namespace PBS {
+class Profile;
+class ValueType;
+class Sample;
+class Label;
+class Mapping;
+class Location;
+class Line;
+class Function;
 class Profile {
 private:
 	std::vector<ValueType*> sample_type;

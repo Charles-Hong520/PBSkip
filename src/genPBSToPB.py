@@ -18,6 +18,7 @@ def read_proto_file(file_name):
     f.close()
     return lines
 
+
 # parse the .proto file and return the class name and the fields
 global_classes = {}
 prototype_to_cpptype = {
@@ -62,41 +63,42 @@ def parse_proto_file(lines):
     # {classname: [(repeated) type var = field_id]}
     return classes
 
+
 classes = parse_proto_file(read_proto_file("schema/" + filename + ".proto"))
 
 # print(global_classes)
 
 file = open("sequential/" + filename + "_pbsTopb" + ".h", "w")
+pkg = "pp::"
 
-def generate_Class(classname, src, dst):
+
+def generate_Class(classname, src, dst, depth):
     string = ""
     for i in global_classes[classname]:
         if i["repeated"] and "*" in i["cpp_type"]:
-            string += f"""for (auto e : {src}.get_{i['var']}()) {{
-{i['cpp_type']} temp = {dst}.add_{i['var'].lower()}();
+            string += f"""for (auto e{depth} : {src}->get_{i['var']}()) {{
+{pkg}{i['cpp_type']} temp{depth} = {dst}->add_{i['var'].lower()}();
 """
-            string += generate_Class(i["proto_type"], "e", "temp")
+            string += generate_Class(
+                i["proto_type"], f"e{depth}", f"temp{depth}", depth + 1
+            )
             string += "}\n"
         elif i["repeated"] and "*" not in i["cpp_type"]:
-            string += f"""for (auto e : {src}.get_{i['var']}()) {{
-{dst}->add_{i['var'].lower()}(e);
+            string += f"""for (auto e{depth} : {src}->get_{i['var']}()) {{
+{dst}->add_{i['var'].lower()}(e{depth});
 }}
 """
         elif not i["repeated"] and "*" in i["cpp_type"]:
-            string += f"""{i['cpp_type']} temp = new {i['proto_type']}();
-{generate_Class(i["proto_type"], src + ".get_" + i["var"] + "()", "temp")}
-{i['cpp_type']} temp = {dst}.set_allocated_{i['var'].lower()}();
+            string += f"""{pkg}{i['cpp_type']} temp{depth} = new {pkg}{i['proto_type']}();
+{generate_Class(i["proto_type"], f"{src}->get_{i['var']}()", f"temp{depth}", depth+1)}
+{dst}->set_allocated_{i['var'].lower()}(temp{depth});
 """
         elif not i["repeated"] and "*" not in i["cpp_type"]:
-            string += f"""{dst}->set_{i['var'].lower()}({src}.get_{i['var']}());
+            string += f"""{dst}->set_{i['var'].lower()}({src}->get_{i['var']}());
 """
     return string
 
-string = generate_Class(f"{filename.capitalize()}", "pbs", "profile_custom")
-file.write(f"""#ifndef __{filename.upper()}_PBSTOPB_H__
-#define __{filename.upper()}_PBSTOPB_H__
-{string}
 
-#endif
-""")
+string = generate_Class(f"{filename.capitalize()}", "pbs", "profile_custom", 0)
+file.write(string)
 file.close()
