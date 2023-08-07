@@ -19,7 +19,6 @@ bool Address::parseAddress(Seeker& seek) {
       case 1:  // zipcode
         if (wire == 0) {
           uint32_t i;
-          std::cout << "seek zipcode: " << seek.curr << "\n";
           seek.ReadVarint32(&i);
           set_zipcode(i);
         }

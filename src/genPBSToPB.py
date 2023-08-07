@@ -3,7 +3,7 @@ import sys
 import re
 
 # read the .proto file as lines
-filename = "profile"
+filename = input("enter filename without extension: ")
 
 
 def read_proto_file(file_name):

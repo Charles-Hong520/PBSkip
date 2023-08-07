@@ -4,11 +4,20 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
+#include <initializer_list>
 #include <iostream>
 #include <string>
 inline void handle_error(const char* msg) {
   perror(msg);
   exit(0);
+}
+
+inline void print() { std::cout << '\n'; }
+
+template <typename T, typename... Args>
+inline void print(const T& t, Args... args) {
+  std::cout << t << ' ';
+  print(args...);
 }
 
 struct Buffer {
@@ -53,7 +62,7 @@ struct Seeker {
     this->curr = s.curr;
     this->end = s.curr + length;
   }
-  bool ReadVarint32(uint32_t* i) {
+  inline bool ReadVarint32(uint32_t* i) {
     *i = 0;
     uint32_t shift = 0;
     while (curr < end) {
@@ -84,6 +93,7 @@ struct Seeker {
       }
       shift += 7;
     }
+    std::cout << curr << std::endl;
     handle_error("ReadVarint64: eof");
   }
 

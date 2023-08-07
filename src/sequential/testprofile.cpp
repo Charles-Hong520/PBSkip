@@ -39,6 +39,7 @@ int main() {
   // parses our PBSkip object
 
   std::cout << "Parsing " << file << " with custom API" << std::endl;
+  std::cout << "content size: " << content.size << std::endl;
   Seeker seeker(content, 0, content.size);
   pbs->parseProfile(seeker);
 

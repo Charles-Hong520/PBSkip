@@ -6,7 +6,7 @@ import re
 
 # read the .proto file as lines
 
-filename = "profile"
+filename = input("enter filename without extension: ")
 
 
 def read_proto_file(file_name):
@@ -229,10 +229,15 @@ def genCase(f):
 \t\t\tuint32_t len;
 \t\t\tseek.ReadVarint32(&len);
 \t\t\tuint{bits}_t i;
-\t\t\twhile (len--) {{
+\t\t\tuint32_t endOfMsg = seek.curr + len;
+\t\t\twhile (seek.curr < endOfMsg) {{
 \t\t\t\tseek.ReadVarint{bits}(&i);
 \t\t\t\tadd_{f["var"]}(i);
 \t\t\t}}
+\t\t}} else if (wire == 0) {{
+\t\t\tuint{bits}_t i;
+\t\t\t\tseek.ReadVarint{bits}(&i);
+\t\t\t\tadd_{f["var"]}(i);
 \t\t}}
 \t\tbreak;
 """
@@ -279,6 +284,7 @@ def parseClass(classname, fields):
         string += genCase(f)
 
     string += f"""\t\t}}
+    print("{classname}",seek.curr, field_id);
     tag = seek.ReadTag();
 \t}}
 \treturn true;

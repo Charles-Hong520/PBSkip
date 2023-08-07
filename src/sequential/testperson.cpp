@@ -81,6 +81,13 @@ int main() {
   //-----------------------------------
   if (!google::protobuf::util::MessageDifferencer::Equivalent(person_custom, person_correct)) {
     std::cout << "MISMATCH" << std::endl;
+    std::string right, wrong;
+    google::protobuf::TextFormat::PrintToString(person_custom, &wrong);
+    google::protobuf::TextFormat::PrintToString(person_correct, &right);
+    std::cout << "right: \n"
+              << right << std::endl;
+    std::cout << "wrong: \n"
+              << wrong << std::endl;
   } else {
     std::cout << "MATCH" << std::endl;
   }

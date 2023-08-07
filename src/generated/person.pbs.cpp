@@ -54,6 +54,7 @@ bool Address::parseAddress(Seeker& seek) {
 		}
 		break;
 		}
+    print("Address",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -147,10 +148,15 @@ bool Person::parsePerson(Seeker& seek) {
 			uint32_t len;
 			seek.ReadVarint32(&len);
 			uint64_t i;
-			while (len--) {
+			uint32_t endOfMsg = seek.curr + len;
+			while (seek.curr < endOfMsg) {
 				seek.ReadVarint64(&i);
 				add_ages(i);
 			}
+		} else if (wire == 0) {
+			uint64_t i;
+				seek.ReadVarint64(&i);
+				add_ages(i);
 		}
 		break;
 		case 6:
@@ -165,6 +171,7 @@ bool Person::parsePerson(Seeker& seek) {
 		}
 		break;
 		}
+    print("Person",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;

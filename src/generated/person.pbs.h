@@ -5,6 +5,8 @@
 #include <iostream>
 #include "../lib.h"
 namespace PBS {
+class Address;
+class Person;
 class Address {
 private:
 	uint32_t zipcode;
