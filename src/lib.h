@@ -6,7 +6,9 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <map>
 #include <string>
+#include <vector>
 inline void handle_error(const char* msg) {
   perror(msg);
   exit(0);
@@ -53,14 +55,22 @@ struct Seeker {
     if (buffer.size - length < start) {
       handle_error("Seeker Constructor");
     }
-    this->end = start + length;
     this->curr = start;
+    this->end = start + length;
     this->buffer = buffer.buffer;  // always 0th index/beg of file
   }
   Seeker(Seeker& s, size_t length) {
     this->buffer = s.buffer;
     this->curr = s.curr;
     this->end = s.curr + length;
+  }
+  Seeker(uint8_t* b, uint32_t start, size_t length) {
+    this->buffer = b;
+    this->curr = start;
+    this->end = start + length;
+  }
+  inline void Skip(uint32_t len) {
+    this->curr += len;
   }
   inline bool ReadVarint32(uint32_t* i) {
     *i = 0;
