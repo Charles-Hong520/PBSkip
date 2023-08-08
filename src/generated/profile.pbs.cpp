@@ -104,55 +104,55 @@ bool Profile::parseProfile(Seeker& seek) {
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    ValueType* msg_ = new ValueType();
+                    // ValueType* msg_ = new ValueType();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseValueType(copyseeker);
-                    add_sample_type(msg_);
+                    // msg_->parseValueType(copyseeker);
+                    // add_sample_type(msg_);
                 }
                 break;
             case 2:
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    Sample* msg_ = new Sample();
+                    // Sample* msg_ = new Sample();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseSample(copyseeker);
-                    add_sample(msg_);
+                    // msg_->parseSample(copyseeker);
+                    // add_sample(msg_);
                 }
                 break;
             case 3:
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    Mapping* msg_ = new Mapping();
+                    // Mapping* msg_ = new Mapping();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseMapping(copyseeker);
-                    add_mapping(msg_);
+                    // msg_->parseMapping(copyseeker);
+                    // add_mapping(msg_);
                 }
                 break;
             case 4:
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    Location* msg_ = new Location();
+                    // Location* msg_ = new Location();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseLocation(copyseeker);
-                    add_location(msg_);
+                    // msg_->parseLocation(copyseeker);
+                    // add_location(msg_);
                 }
                 break;
             case 5:
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    Function* msg_ = new Function();
+                    // Function* msg_ = new Function();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseFunction(copyseeker);
-                    add_function(msg_);
+                    // msg_->parseFunction(copyseeker);
+                    // add_function(msg_);
                 }
                 break;
             case 6:
@@ -160,8 +160,9 @@ bool Profile::parseProfile(Seeker& seek) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
                     std::string buffer;
-                    seek.ReadString(&buffer, len);
-                    add_string_table(buffer);
+                    seek.curr += len;
+                    // seek.ReadString(&buffer, len);
+                    // add_string_table(buffer);
                 }
                 break;
             case 7:
@@ -196,11 +197,11 @@ bool Profile::parseProfile(Seeker& seek) {
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    ValueType* msg_ = new ValueType();
+                    // ValueType* msg_ = new ValueType();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseValueType(copyseeker);
-                    set_period_type(msg_);
+                    // msg_->parseValueType(copyseeker);
+                    // set_period_type(msg_);
                 }
                 break;
             case 12:
@@ -216,10 +217,11 @@ bool Profile::parseProfile(Seeker& seek) {
                     seek.ReadVarint32(&len);
                     uint64_t i;
                     uint32_t endOfMsg = seek.curr + len;
-                    while (seek.curr < endOfMsg) {
-                        seek.ReadVarint64(&i);
-                        add_comment(i);
-                    }
+                    seek.curr += len;
+                    // while (seek.curr < endOfMsg) {
+                    //     seek.ReadVarint64(&i);
+                    //     add_comment(i);
+                    // }
                 } else if (wire == 0) {
                     uint64_t i;
                     seek.ReadVarint64(&i);
@@ -315,10 +317,11 @@ bool Sample::parseSample(Seeker& seek) {
                     seek.ReadVarint32(&len);
                     uint64_t i;
                     uint32_t endOfMsg = seek.curr + len;
-                    while (seek.curr < endOfMsg) {
-                        seek.ReadVarint64(&i);
-                        add_location_id(i);
-                    }
+                    seek.curr += len;
+                    // while (seek.curr < endOfMsg) {
+                    //     seek.ReadVarint64(&i);
+                    //     add_location_id(i);
+                    // }
                 } else if (wire == 0) {
                     uint64_t i;
                     seek.ReadVarint64(&i);
@@ -331,10 +334,11 @@ bool Sample::parseSample(Seeker& seek) {
                     seek.ReadVarint32(&len);
                     uint64_t i;
                     uint32_t endOfMsg = seek.curr + len;
-                    while (seek.curr < endOfMsg) {
-                        seek.ReadVarint64(&i);
-                        add_value(i);
-                    }
+                    seek.curr += len;
+                    // while (seek.curr < endOfMsg) {
+                    //     seek.ReadVarint64(&i);
+                    //     add_value(i);
+                    // }
                 } else if (wire == 0) {
                     uint64_t i;
                     seek.ReadVarint64(&i);
@@ -345,11 +349,11 @@ bool Sample::parseSample(Seeker& seek) {
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    Label* msg_ = new Label();
+                    // Label* msg_ = new Label();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseLabel(copyseeker);
-                    add_label(msg_);
+                    // msg_->parseLabel(copyseeker);
+                    // add_label(msg_);
                 }
                 break;
         }
@@ -652,11 +656,11 @@ bool Location::parseLocation(Seeker& seek) {
                 if (wire == 2) {
                     uint32_t len;
                     seek.ReadVarint32(&len);
-                    Line* msg_ = new Line();
+                    // Line* msg_ = new Line();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseLine(copyseeker);
-                    add_line(msg_);
+                    // msg_->parseLine(copyseeker);
+                    // add_line(msg_);
                 }
                 break;
             case 5:
