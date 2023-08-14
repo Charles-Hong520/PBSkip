@@ -25,6 +25,28 @@ g++ -std=c++17 src/parallel/profile.pbs.cpp src/schema/profile.pb.cc src/paralle
 */
 
 #define pp perftools::profiles
+
+template <class T>
+void cmp_msg(T* profile_custom, T* profile_correct, std::string type) {
+  std::string right, wrong;
+  profile_correct->SerializeToString(&right);
+  if (!google::protobuf::util::MessageDifferencer::Equivalent(*profile_custom, *profile_correct)) {
+    print("comparing:", type);
+    std::cout << "MISMATCH" << std::endl;
+
+    profile_custom->SerializeToString(&wrong);
+
+    // google::protobuf::TextFormat::PrintToString(*profile_custom, &wrong);
+    // google::protobuf::TextFormat::PrintToString(*profile_correct, &right);
+
+    std::cout << "wrong: " << wrong.size() << std::endl;
+    std::cout << "right: " << right.size() << std::endl;
+    std::cout << "\n";
+  } else {
+    std::cout << "MATCH" << std::endl;
+  }
+}
+
 int main() {
   std::string file = "dataset/zz.prof";
   Buffer content(file);
@@ -73,6 +95,7 @@ int main() {
   //-----------------------------------
   // parses our object into the google message object to verify correctness
   std::cout << "Converting custom into google message" << std::endl;
+
   for (auto e0 : pbs->get_sample_type()) {
     pp::ValueType* temp0 = profile_custom->add_sample_type();
     temp0->set_type(e0->get_type());
@@ -146,22 +169,5 @@ int main() {
   profile_custom->set_default_sample_type(pbs->get_default_sample_type());
 
   //-----------------------------------
-  if (!google::protobuf::util::MessageDifferencer::Equivalent(*profile_custom, *profile_correct)) {
-    std::cout << "MISMATCH" << std::endl;
-    std::string right, wrong;
-    profile_correct->SerializeToString(&right);
-    profile_custom->SerializeToString(&wrong);
-
-
-
-
-    // google::protobuf::TextFormat::PrintToString(*profile_custom, &wrong);
-    // google::protobuf::TextFormat::PrintToString(*profile_correct, &right);
-    std::cout << "right: \n"
-              << right.size() << std::endl;
-    std::cout << "wrong: \n"
-              << wrong.size() << std::endl;
-  } else {
-    std::cout << "MATCH" << std::endl;
-  }
+  cmp_msg(profile_custom, profile_correct, "profile");
 }

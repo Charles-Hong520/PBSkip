@@ -234,7 +234,7 @@ bool Profile::parseProfile(Seeker& seek) {
 			}
 			break;
 		}
-    print("Profile",seek.curr, field_id);
+    // print("Profile",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -277,7 +277,7 @@ bool ValueType::parseValueType(Seeker& seek) {
 			}
 			break;
 		}
-    print("ValueType",seek.curr, field_id);
+    // print("ValueType",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -353,7 +353,7 @@ bool Sample::parseSample(Seeker& seek) {
 		}
 		break;
 		}
-    print("Sample",seek.curr, field_id);
+    // print("Sample",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -424,7 +424,7 @@ bool Label::parseLabel(Seeker& seek) {
 			}
 			break;
 		}
-    print("Label",seek.curr, field_id);
+    // print("Label",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -579,7 +579,7 @@ bool Mapping::parseMapping(Seeker& seek) {
 			}
 			break;
 		}
-    print("Mapping",seek.curr, field_id);
+    // print("Mapping",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -667,7 +667,7 @@ bool Location::parseLocation(Seeker& seek) {
 			}
 			break;
 		}
-    print("Location",seek.curr, field_id);
+    // print("Location",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -710,7 +710,7 @@ bool Line::parseLine(Seeker& seek) {
 			}
 			break;
 		}
-    print("Line",seek.curr, field_id);
+    // print("Line",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;
@@ -795,7 +795,7 @@ bool Function::parseFunction(Seeker& seek) {
 			}
 			break;
 		}
-    print("Function",seek.curr, field_id);
+    // print("Function",seek.curr, field_id);
     tag = seek.ReadTag();
 	}
 	return true;

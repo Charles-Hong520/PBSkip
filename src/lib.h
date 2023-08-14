@@ -9,10 +9,6 @@
 #include <map>
 #include <string>
 #include <vector>
-inline void handle_error(const char* msg) {
-  perror(msg);
-  exit(0);
-}
 
 inline void print() { std::cout << '\n'; }
 
@@ -21,7 +17,10 @@ inline void print(const T& t, Args... args) {
   std::cout << t << ' ';
   print(args...);
 }
-
+inline void handle_error(std::string msg) {
+  print(msg);
+  exit(0);
+}
 struct Buffer {
   uint8_t* buffer;
   size_t size;

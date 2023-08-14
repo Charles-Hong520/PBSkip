@@ -284,7 +284,7 @@ def parseClass(classname, fields):
         string += genCase(f)
 
     string += f"""\t\t}}
-    print("{classname}",seek.curr, field_id);
+    // print("{classname}",seek.curr, field_id);
     tag = seek.ReadTag();
 \t}}
 \treturn true;

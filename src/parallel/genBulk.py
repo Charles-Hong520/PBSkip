@@ -14,7 +14,7 @@ filename = "bulk_gen.txt"
 def parallel():
     file = open(filename, "w")
     str = ""
-    for fid, sec in repeated2str.items():
+    for fid, sec in repeated2msg.items():
         (t, var) = sec
         str += f"""
   void Profile::bulk_add_{var}(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {{
@@ -73,4 +73,4 @@ void Profile::bulk_add_{var}(std::vector<std::pair<uint64_t, uint64_t>>& tr, uin
     file.close()
 
 
-sequential()
+parallel()

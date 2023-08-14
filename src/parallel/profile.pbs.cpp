@@ -138,11 +138,13 @@ bool Profile::parseProfile(Seeker& seek) {
         seek.ReadVarint32(&len);
         ValueType* msg_ = new ValueType();
         Seeker copyseeker(seek, len);
-        seek.curr += len;
+        seek.Skip(len);
         msg_->parseValueType(copyseeker);
         set_period_type(msg_);
       } else {
-        seek.ReadVarint32(&len);
+        if (!seek.ReadVarint32(&len)) {
+          handle_error("read len 32 wrong" + std::to_string(seek.curr));
+        }
         tracker[field_id].push_back({seek.curr, len});
         seek.Skip(len);
       }
@@ -157,13 +159,15 @@ bool Profile::parseProfile(Seeker& seek) {
   function.resize(tracker[5].size());
   string_table.resize(tracker[6].size());
   comment.resize(tracker[13].size());
+  print("before fill");
+  for (auto &e : sample) e = new Sample();
+  print("after fill");
+  // for (const auto& [fid, v] : tracker) {
+  //   int sum = 0;
+  //   for (auto e : v) sum += e.second;
 
-  for (const auto& [fid, v] : tracker) {
-    int sum = 0;
-    for (auto e : v) sum += e.second;
-
-    print(fid, v.size(), sum);
-  }
+  //   print(fid, v.size(), sum);
+  // }
 
   bulk_add_sample_type(tracker[1], seek.buffer);
   bulk_add_sample(tracker[2], seek.buffer);
@@ -172,7 +176,7 @@ bool Profile::parseProfile(Seeker& seek) {
   bulk_add_function(tracker[5], seek.buffer);
   bulk_add_string_table(tracker[6], seek.buffer);
   bulk_add_comment(tracker[13], seek.buffer);
-  print("done parsing profile inside parseProfile()");
+  // print("done parsing profile inside parseProfile()");
   return true;
 }
 ValueType::ValueType() {
@@ -251,7 +255,6 @@ bool Sample::parseSample(Seeker& seek) {
           seek.ReadVarint32(&len);
           uint64_t i;
           uint32_t endOfMsg = seek.curr + len;
-          seek.curr += len;
           while (seek.curr < endOfMsg) {
             seek.ReadVarint64(&i);
             add_location_id(i);
@@ -268,7 +271,6 @@ bool Sample::parseSample(Seeker& seek) {
           seek.ReadVarint32(&len);
           uint64_t i;
           uint32_t endOfMsg = seek.curr + len;
-          seek.curr += len;
           while (seek.curr < endOfMsg) {
             seek.ReadVarint64(&i);
             add_value(i);
@@ -740,68 +742,52 @@ bool Function::parseFunction(Seeker& seek) {
 }
 
 void Profile::bulk_add_sample_type(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  int sum = 0;
-  for (int i = 0; i < tr.size(); i++) {
+  parlay::parallel_for(0, tr.size(), [&](int i) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     sample_type[i] = new ValueType();
     sample_type[i]->parseValueType(seeker);
-    sum += tr[i].second;
-  }
-  print("sample_type", sum);
+  });
 }
 
 void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  int sum = 0;
-  for (int i = 0; i < tr.size(); i++) {
+  print("before bulkaddsample");
+  parlay::parallel_for(0, tr.size(), [&](int i) {
     Seeker seeker(b, tr[i].first, tr[i].second);
-    sample[i] = new Sample();
+    // sample[i] = new Sample();
     sample[i]->parseSample(seeker);
-    sum += tr[i].second;
-  }
-  print("sample", sum);
+  });
+  print("after bulkaddsample");
 }
 
 void Profile::bulk_add_mapping(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  int sum = 0;
-  for (int i = 0; i < tr.size(); i++) {
+  parlay::parallel_for(0, tr.size(), [&](int i) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     mapping[i] = new Mapping();
     mapping[i]->parseMapping(seeker);
-    sum += tr[i].second;
-  }
-  print("mapping", sum);
+  });
 }
 
 void Profile::bulk_add_location(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  int sum = 0;
-  for (int i = 0; i < tr.size(); i++) {
+  parlay::parallel_for(0, tr.size(), [&](int i) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     location[i] = new Location();
     location[i]->parseLocation(seeker);
-    sum += tr[i].second;
-  }
-  print("location", sum);
+  });
 }
 
 void Profile::bulk_add_function(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  int sum = 0;
-  for (int i = 0; i < tr.size(); i++) {
+  parlay::parallel_for(0, tr.size(), [&](int i) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     function[i] = new Function();
     function[i]->parseFunction(seeker);
-    sum += tr[i].second;
-  }
-  print("function", sum);
+  });
 }
 
 void Profile::bulk_add_string_table(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  int sum = 0;
-  for (int i = 0; i < tr.size(); i++) {
+  parlay::parallel_for(0, tr.size(), [&](int i) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     seeker.ReadString(&string_table[i], tr[i].second);
-    sum += tr[i].second;
-  }
-  print("string_table", sum);
+  });
 }
 
 void Profile::bulk_add_comment(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
