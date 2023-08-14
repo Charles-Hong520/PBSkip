@@ -48,8 +48,11 @@ void cmp_msg(T* profile_custom, T* profile_correct, std::string type) {
 }
 
 int main() {
+  std::cout << "In main\n";
   std::string file = "dataset/zz.prof";
+  std::cout << "after file name\n";
   Buffer content(file);
+  std:: cout << "after buffer load\n";
   PBS::Profile* pbs = new PBS::Profile();
   pp::Profile* profile_correct = new pp::Profile();
   pp::Profile* profile_custom = new pp::Profile();

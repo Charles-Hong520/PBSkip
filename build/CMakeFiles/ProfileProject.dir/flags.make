@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -isystem /opt/linux/rocky/8.x/x86_64/pkgs/protobuf/v23.4/include
 
-CXX_FLAGS =  -O3 -std=gnu++17
+CXX_FLAGS = -std=gnu++17
 
