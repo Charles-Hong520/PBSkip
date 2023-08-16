@@ -11,11 +11,12 @@ find_package(Protobuf REQUIRED CONFIG)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 set(SOURCES
-	src/parallel/profile.pbs.cpp 
-	src/schema/profile.pb.cc 
-	src/parallel/testprofile.cpp
-	)
+    testprofile.cpp
+    profile.pbs.cpp
+    ../schema/profile.pb.cc
+)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf protobuf::libprotoc Threads::Threads)
+

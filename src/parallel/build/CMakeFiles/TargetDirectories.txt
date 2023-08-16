@@ -1,0 +1,3 @@
+/rhome/dparm003/PBSkip/src/parallel/build/CMakeFiles/ProfileProject.dir
+/rhome/dparm003/PBSkip/src/parallel/build/CMakeFiles/edit_cache.dir
+/rhome/dparm003/PBSkip/src/parallel/build/CMakeFiles/rebuild_cache.dir

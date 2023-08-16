@@ -26,6 +26,7 @@ g++ -std=c++17 src/generated/profile.pbs.cpp src/schema/profile.pb.cc src/sequen
 
 #define pp perftools::profiles
 int main() {
+    std::cout << "------------------Running the sequential verison-----------------\n"; 
     std::string file = "dataset/zz.prof";
     Buffer content(file);
     PBS::Profile* pbs = new PBS::Profile();
