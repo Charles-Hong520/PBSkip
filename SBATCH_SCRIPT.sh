@@ -13,7 +13,7 @@ date
 module load cmake
 module load gcc
 module load protobuf/
-
+protoc --proto_path=src/schema/ --cpp_out=src/schema/ profile.proto
 cd src/sequential/
 rm -rf build
 mkdir build
@@ -26,7 +26,14 @@ mkdir build
 cd build
 cmake ..
 make
+cd src/google_api/
+rm -rf build
+mkdir build
+cd build
+cmake ..
+make
 cd ../../..
 ./src/sequential/build/ProfileProject
 ./src/parallel/build/ProfileProject
+/src/google_api/build/ProfileProject
 hostname
