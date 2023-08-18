@@ -1,0 +1,3 @@
+/rhome/dparm003/PBSkip/src/google_api/build/CMakeFiles/ProfileProject.dir
+/rhome/dparm003/PBSkip/src/google_api/build/CMakeFiles/edit_cache.dir
+/rhome/dparm003/PBSkip/src/google_api/build/CMakeFiles/rebuild_cache.dir

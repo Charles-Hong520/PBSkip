@@ -26,7 +26,7 @@ mkdir build
 cd build
 cmake ..
 make
-cd src/google_api/
+cd ../../google_api/
 rm -rf build
 mkdir build
 cd build
@@ -35,5 +35,5 @@ make
 cd ../../..
 ./src/sequential/build/ProfileProject
 ./src/parallel/build/ProfileProject
-/src/google_api/build/ProfileProject
+./src/google_api/build/ProfileProject
 hostname
