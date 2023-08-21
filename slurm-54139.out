@@ -1,0 +1,66 @@
+Fri Aug 18 09:56:43 PDT 2023
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.9s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/dparm003/PBSkip/src/sequential/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/generated/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/dparm003/PBSkip/src/parallel/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+/var/spool/slurmd/job54139/slurm_script: line 29: cd: src/google_api/: No such file or directory
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/dparm003/PBSkip/src/parallel/build
+make: *** No targets specified and no makefile found.  Stop.
+/var/spool/slurmd/job54139/slurm_script: line 36: ./src/sequential/build/ProfileProject: No such file or directory
+/var/spool/slurmd/job54139/slurm_script: line 37: ./src/parallel/build/ProfileProject: No such file or directory
+/var/spool/slurmd/job54139/slurm_script: line 38: /src/google_api/build/ProfileProject: No such file or directory
+i29

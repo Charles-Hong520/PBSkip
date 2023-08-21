@@ -1,0 +1,111 @@
+Sun Aug 20 04:32:43 PDT 2023
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (2.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/dparm003/PBSkip/src/sequential/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/generated/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/dparm003/PBSkip/src/parallel/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/dparm003/PBSkip/src/google_api/build
+[ 33%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 66%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/dparm003/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+------------------Running the sequential verison-----------------
+Parsing dataset/zz.prof with custom API
+content size: 1084012708
+Time for custom parse in Sequential:
+attempt 0 35.6869s
+attempt 1 1e-07s
+attempt 2 4.7e-08s
+attempt 3 3.2e-08s
+attempt 4 2.5e-08s
+---------------------Running the parallel version----------------------
+Parsing dataset/zz.prof with custom API
+content size: 1084012708
+Time for custom parse in parallel:
+attempt 1 9.19288s
+attempt 2 1.3911e-05s
+attempt 3 1.6713e-05s
+attempt 4 5.78e-06s
+attempt 5 2.09168e-317s
+---------------------Running the Google API version----------------------
+Parsing dataset/zz.prof with Google API
+Time for Google API parse:
+attempt 1 36.0411s
+attempt 2 1.4267e-05s
+attempt 3 7.31e-07s
+attempt 4 6.45e-07s
+attempt 5 6.43e-07s
+i34
