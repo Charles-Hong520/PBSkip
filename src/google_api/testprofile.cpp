@@ -27,29 +27,31 @@ g++ -std=c++17 src/schema/profile.pb.cc src/google_api/testprofile.cpp -lprotobu
 #define pp perftools::profiles
 
 int main() {
-    std::cout << "---------------------Running the Google API version----------------------\n";
-    std::string file = "dataset/zz.prof";
-    pp::Profile* profile_correct = new pp::Profile();
+  std::cout << "---------------------Running the Google API version----------------------\n";
+  std::string file = "dataset/zz.prof";
+  pp::Profile* profile_correct = new pp::Profile();
 
-    std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
-    std::chrono::duration<double> elapsed_seconds[5];
-    //-----------------------------------
+  std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
+  std::chrono::duration<double> elapsed_seconds[5];
+  //-----------------------------------
 
-    // parses google protobuf message object
+  // parses google protobuf message object
 
-    std::cout << "Parsing " << file << " with Google API" << std::endl;
-    std::fstream cinput(file, std::ios::in | std::ios::binary);
+  std::cout << "Parsing " << file << " with Google API" << std::endl;
+  std::fstream cinput(file, std::ios::in | std::ios::binary);
 
-    for (int i = 0; i < 5; i++) {
-        start_T = std::chrono::system_clock::now();
-        profile_correct->ParseFromIstream(&cinput);
-        end_T = std::chrono::system_clock::now();
-        elapsed_seconds[i] = end_T - start_T;
-        profile_correct->Clear();
-    }
+  for (int i = 0; i < 5; i++) {
+    start_T = std::chrono::system_clock::now();
+    profile_correct->ParseFromIstream(&cinput);
+    end_T = std::chrono::system_clock::now();
+    elapsed_seconds[i] = end_T - start_T;
+    profile_correct->Clear();
+    cinput.clear();
+    cinput.seekg(0, std::ios::beg);
+  }
 
-    std::cout << "Time for Google API parse:\n";
-    for (int i = 0; i < 5; i++) {
-        std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
-    }
+  std::cout << "Time for Google API parse:\n";
+  for (int i = 0; i < 5; i++) {
+    std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
+  }
 }
