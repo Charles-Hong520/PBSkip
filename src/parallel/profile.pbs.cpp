@@ -177,6 +177,16 @@ bool Profile::parseProfile(Seeker& seek) {
     // print("done parsing profile inside parseProfile()");
     return true;
 }
+
+// destructor for Profile for deleting all pointer and preventing memory leak
+Profile::~Profile() {
+    for (auto e : sample_type) delete e;
+    for (auto e : sample) delete e;
+    for (auto e : mapping) delete e;
+    for (auto e : location) delete e;
+    for (auto e : function) delete e;
+}
+
 ValueType::ValueType() {
     type = 0;
     unit = 0;
@@ -795,16 +805,5 @@ void Profile::bulk_add_comment(std::vector<std::pair<uint64_t, uint64_t>>& tr, u
             add_comment(i64);
         }
     });
-}
-
-void Profile::reset() {
-    tracker.clear();
-    sample_type.clear();
-    sample.clear();
-    mapping.clear();
-    location.clear();
-    function.clear();
-    string_table.clear();
-    comment.clear();
 }
 }  // namespace PBS

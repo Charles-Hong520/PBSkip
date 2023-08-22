@@ -42,8 +42,6 @@ class Profile {
     void bulk_add_string_table(std::vector<std::pair<uint64_t, uint64_t>>&, uint8_t*);
     void bulk_add_comment(std::vector<std::pair<uint64_t, uint64_t>>&, uint8_t*);
 
-    void reset();
-
     std::vector<ValueType*> get_sample_type();
     void add_sample(Sample*);
     std::vector<Sample*> get_sample();
@@ -73,6 +71,8 @@ class Profile {
     int64_t get_default_sample_type();
     bool parseProfile(Seeker&);
     friend std::ostream& operator<<(std::ostream& os, const Profile&);
+    // make a destruction to prevent memory leaks
+    ~Profile();
 };
 class ValueType {
    private:
