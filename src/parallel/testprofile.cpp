@@ -55,7 +55,9 @@ int main() {
     pp::Profile* profile_custom = new pp::Profile();
 
     std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
-    std::chrono::duration<double> elapsed_seconds[5];
+    int runs = 10;
+    double avg = 0.0;
+    std::chrono::duration<double> elapsed_seconds[runs];
     //-----------------------------------
 
     // parses our PBSkip object
@@ -64,7 +66,7 @@ int main() {
     std::cout << "content size: " << content.size << std::endl;
     Seeker seeker(content, 0, content.size);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < runs; i++) {
         PBS::Profile* pbs = new PBS::Profile();
         seeker.curr = 0;
         start_T = std::chrono::system_clock::now();
@@ -75,9 +77,11 @@ int main() {
     }
 
     std::cout << "Time for custom parse in parallel:\n";
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < runs; i++) {
         std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
+        avg += elapsed_seconds[i].count();
     }
+    std::cout << "average: " << avg / runs << "s\n";
     // std::cout << "Time for custom parse: " << elapsed_seconds.count() << "s\n";
 
     //-----------------------------------
