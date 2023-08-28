@@ -27,7 +27,7 @@ g++ -std=c++17 src/schema/profile.pb.cc src/google_api/testprofile.cpp -lprotobu
 #define pp perftools::profiles
 
 int main() {
-    std::cout << "---------------------Running the Google API version----------------------\n";
+    // std::cout << "---------------------Running the Google API version----------------------\n";
     std::string file = "dataset/zz.prof";
     pp::Profile* profile_correct = new pp::Profile();
 
