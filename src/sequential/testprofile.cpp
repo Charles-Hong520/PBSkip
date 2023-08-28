@@ -26,39 +26,39 @@ g++ -std=c++17 src/generated/profile.pbs.cpp src/schema/profile.pb.cc src/sequen
 
 #define pp perftools::profiles
 int main() {
-    std::cout << "------------------Running the sequential verison-----------------\n";
+    // std::cout << "------------------Running the sequential verison-----------------\n";
     std::string file = "dataset/zz.prof";
     Buffer content(file);
     pp::Profile* profile_correct = new pp::Profile();
     pp::Profile* profile_custom = new pp::Profile();
 
     std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
-    int runs = 10;
-    double avg = 0.0;
-    std::chrono::duration<double> elapsed_seconds[runs];
+    // int runs = 10;
+    // double avg = 0.0;
+    std::chrono::duration<double> elapsed_seconds;
     //-----------------------------------
 
     // parses our PBSkip object
 
-    std::cout << "Parsing " << file << " with custom API" << std::endl;
-    std::cout << "content size: " << content.size << std::endl;
+    // std::cout << "Parsing " << file << " with custom API" << std::endl;
+    // std::cout << "content size: " << content.size << std::endl;
     Seeker seeker(content, 0, content.size);
 
-    for (int i = 0; i < runs; i++) {
-        PBS::Profile* pbs = new PBS::Profile();
-        seeker.curr = 0;
-        start_T = std::chrono::system_clock::now();
-        pbs->parseProfile(seeker);
-        end_T = std::chrono::system_clock::now();
-        elapsed_seconds[i] = end_T - start_T;
-    }
+    PBS::Profile* pbs = new PBS::Profile();
+    seeker.curr = 0;
+    start_T = std::chrono::system_clock::now();
+    pbs->parseProfile(seeker);
+    end_T = std::chrono::system_clock::now();
+    elapsed_seconds = end_T - start_T;
 
-    std::cout << "Time for custom parse in Sequential:\n";
-    for (int i = 0; i < runs; i++) {
-        std::cout << "attempt " << i << " " << elapsed_seconds[i].count() << "s\n";
-        avg += elapsed_seconds[i].count();
-    }
-    std::cout << "average: " << avg / runs << "s\n";
+    std::cout << "time: " << elapsed_seconds.count() << "s\n";
+
+    // std::cout << "Time for custom parse in Sequential:\n";
+    // for (int i = 0; i < runs; i++) {
+    //     std::cout << "attempt " << i << " " << elapsed_seconds[i].count() << "s\n";
+    //     avg += elapsed_seconds[i].count();
+    // }
+    // std::cout << "average: " << avg / runs << "s\n";
 
     //-----------------------------------
 

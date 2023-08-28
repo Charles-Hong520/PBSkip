@@ -48,7 +48,7 @@ void cmp_msg(T* profile_custom, T* profile_correct, std::string type) {
 }
 
 int main() {
-    std::cout << "---------------------Running the parallel version----------------------\n";
+    // std::cout << "---------------------Running the parallel version----------------------\n";
     std::string file = "dataset/zz.prof";
     Buffer content(file);
     pp::Profile* profile_correct = new pp::Profile();
@@ -57,32 +57,30 @@ int main() {
     std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
     int runs = 10;
     double avg = 0.0;
-    std::chrono::duration<double> elapsed_seconds[runs];
+    std::chrono::duration<double> elapsed_seconds;
     //-----------------------------------
 
     // parses our PBSkip object
 
-    std::cout << "Parsing " << file << " with custom API" << std::endl;
-    std::cout << "content size: " << content.size << std::endl;
+    // std::cout << "Parsing " << file << " with custom API" << std::endl;
+    // std::cout << "content size: " << content.size << std::endl;
     Seeker seeker(content, 0, content.size);
 
-    for (int i = 0; i < runs; i++) {
-        PBS::Profile* pbs = new PBS::Profile();
-        seeker.curr = 0;
-        start_T = std::chrono::system_clock::now();
-        pbs->parseProfile(seeker);
-        end_T = std::chrono::system_clock::now();
-        elapsed_seconds[i] = end_T - start_T;
-        delete pbs;
-    }
+    PBS::Profile* pbs = new PBS::Profile();
+    seeker.curr = 0;
+    start_T = std::chrono::system_clock::now();
+    pbs->parseProfile(seeker);
+    end_T = std::chrono::system_clock::now();
+    elapsed_seconds = end_T - start_T;
+    delete pbs;
 
-    std::cout << "Time for custom parse in parallel:\n";
-    for (int i = 0; i < runs; i++) {
-        std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
-        avg += elapsed_seconds[i].count();
-    }
-    std::cout << "average: " << avg / runs << "s\n";
-    // std::cout << "Time for custom parse: " << elapsed_seconds.count() << "s\n";
+    // std::cout << "Time for custom parse in parallel:\n";
+    // for (int i = 0; i < runs; i++) {
+    //     std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
+    //     avg += elapsed_seconds[i].count();
+    // }
+    // std::cout << "average: " << avg / runs << "s\n";
+    std::cout << "time: " << elapsed_seconds.count() << "s\n";
 
     //-----------------------------------
 

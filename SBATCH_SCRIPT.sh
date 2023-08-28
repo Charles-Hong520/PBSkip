@@ -33,7 +33,10 @@ cd build
 cmake ..
 make
 cd ../../..
-./src/sequential/build/ProfileProject
-./src/parallel/build/ProfileProject
-./src/google_api/build/ProfileProject
+echo "------------------Running the Sequential verison-------------------"
+for i in {1..10}; do ./src/sequential/build/ProfileProject; done
+echo "------------------Running the Parallel verison---------------------"
+for i in {1..10}; do ./src/parallel/build/ProfileProject; done
+echo "------------------Running the Google API verison-------------------"
+for i in {1..10}; do ./src/google_api/build/ProfileProject; done
 hostname

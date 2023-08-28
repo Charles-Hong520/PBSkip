@@ -34,28 +34,28 @@ int main() {
     std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
     int runs = 10;
     double avg = 0.0;
-    std::chrono::duration<double> elapsed_seconds[runs];
+    std::chrono::duration<double> elapsed_seconds;
     //-----------------------------------
 
     // parses google protobuf message object
 
-    std::cout << "Parsing " << file << " with Google API" << std::endl;
+    // std::cout << "Parsing " << file << " with Google API" << std::endl;
     std::fstream cinput(file, std::ios::in | std::ios::binary);
 
-    for (int i = 0; i < runs; i++) {
-        start_T = std::chrono::system_clock::now();
-        profile_correct->ParseFromIstream(&cinput);
-        end_T = std::chrono::system_clock::now();
-        elapsed_seconds[i] = end_T - start_T;
-        profile_correct->Clear();
-        cinput.clear();
-        cinput.seekg(0, std::ios::beg);
-    }
+    start_T = std::chrono::system_clock::now();
+    profile_correct->ParseFromIstream(&cinput);
+    end_T = std::chrono::system_clock::now();
+    elapsed_seconds = end_T - start_T;
+    profile_correct->Clear();
+    cinput.clear();
+    cinput.seekg(0, std::ios::beg);
 
-    std::cout << "Time for Google API parse:\n";
-    for (int i = 0; i < runs; i++) {
-        std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
-        avg += elapsed_seconds[i].count();
-    }
-    std::cout << "average: " << avg / runs << "s\n";
+    std::cout << "time: " << elapsed_seconds.count() << "s\n";
+
+    // std::cout << "Time for Google API parse:\n";
+    // for (int i = 0; i < runs; i++) {
+    //     std::cout << "attempt " << i + 1 << " " << elapsed_seconds[i].count() << "s\n";
+    //     avg += elapsed_seconds[i].count();
+    // }
+    // std::cout << "average: " << avg / runs << "s\n";
 }
