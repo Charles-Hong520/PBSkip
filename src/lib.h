@@ -102,7 +102,7 @@ struct Seeker {
       }
       shift += 7;
     }
-    std::cout << curr << std::endl;
+    print(curr);
     handle_error("ReadVarint64: eof");
   }
 

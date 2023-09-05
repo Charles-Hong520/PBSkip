@@ -196,7 +196,7 @@ struct scheduler {
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning( \
-    disable : 4996)  // 'getenv': This function or variable may be unsafe.
+        disable : 4996)  // 'getenv': This function or variable may be unsafe.
 #endif
 
   // Determine the number of workers to spawn
@@ -308,7 +308,7 @@ class fork_join_scheduler {
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning( \
-    disable : 4267)  // conversion from 'size_t' to *, possible loss of data
+        disable : 4267)  // conversion from 'size_t' to *, possible loss of data
 #endif
 
   template <typename F>
