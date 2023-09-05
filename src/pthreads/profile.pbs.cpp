@@ -1,5 +1,5 @@
 #include "profile.pbs.h"
-#define NUM_THREADS 4
+#define NUM_THREADS 32
 namespace PBS {
 Profile::Profile() {
   drop_frames = 0;
@@ -750,13 +750,15 @@ bool Function::parseFunction(Seeker& seek) {
   return true;
 }
 
-void Profile::bulk_add_sample_type(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  parlay::parallel_for(0, tr.size(), [&](int i) {
-    Seeker seeker(b, tr[i].first, tr[i].second);
-    sample_type[i] = new ValueType();
-    sample_type[i]->parseValueType(seeker);
-  });
-}
+
+  void Profile::bulk_add_sample_type(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+    for(int i = 0; i < tr.size(); i++) {
+      Seeker seeker(b, tr[i].first, tr[i].second);
+      sample_type[i] = new ValueType();
+      sample_type[i]->parseValueType(seeker);
+    }
+  }
 
 void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   uint32_t n = sample.size();
@@ -789,7 +791,7 @@ void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, ui
     }
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
-    print("thread" + std::to_string(i) + ": " + std::to_string(duration.count() / 1000000.0) + "s");
+    // print("thread" + std::to_string(i) + ": " + std::to_string(duration.count() / 1000000.0) + "s");
   };
   for (int i = 0; i < NUM_THREADS; i++) {
     threads[i] = std::thread(parseSampleRange, i);
@@ -803,35 +805,39 @@ void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, ui
   //   });
 }
 
-void Profile::bulk_add_mapping(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  parlay::parallel_for(0, tr.size(), [&](int i) {
-    Seeker seeker(b, tr[i].first, tr[i].second);
-    mapping[i] = new Mapping();
-    mapping[i]->parseMapping(seeker);
-  });
-}
-
-void Profile::bulk_add_location(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  parlay::parallel_for(0, tr.size(), [&](int i) {
-    Seeker seeker(b, tr[i].first, tr[i].second);
-    location[i] = new Location();
-    location[i]->parseLocation(seeker);
-  });
-}
-
-void Profile::bulk_add_function(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  parlay::parallel_for(0, tr.size(), [&](int i) {
-    Seeker seeker(b, tr[i].first, tr[i].second);
-    function[i] = new Function();
-    function[i]->parseFunction(seeker);
-  });
-}
-
+  void Profile::bulk_add_mapping(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+    for(int i = 0; i < tr.size(); i++) {
+      Seeker seeker(b, tr[i].first, tr[i].second);
+      mapping[i] = new Mapping();
+      mapping[i]->parseMapping(seeker);
+    }
+  }
+  
+  void Profile::bulk_add_location(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+    for(int i = 0; i < tr.size(); i++) {
+      Seeker seeker(b, tr[i].first, tr[i].second);
+      location[i] = new Location();
+      location[i]->parseLocation(seeker);
+    }
+  }
+  
+  void Profile::bulk_add_function(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+    for(int i = 0; i < tr.size(); i++) {
+      Seeker seeker(b, tr[i].first, tr[i].second);
+      function[i] = new Function();
+      function[i]->parseFunction(seeker);
+    }
+  }
+  
 void Profile::bulk_add_string_table(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
-  parlay::parallel_for(0, tr.size(), [&](int i) {
+  int sum = 0;
+  for(int i = 0; i < tr.size(); i++) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     seeker.ReadString(&string_table[i], tr[i].second);
-  });
+  }
 }
 
 void Profile::bulk_add_comment(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {

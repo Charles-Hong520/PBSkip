@@ -51,9 +51,7 @@ def sequential():
       Seeker seeker(b, tr[i].first, tr[i].second);
       {var}[i] = new {t}();
       {var}[i]->parse{t}(seeker);
-    sum += tr[i].second;
     }}
-      print("{var}",sum);
   }}
   """
     for fid, sec in repeated2str.items():
@@ -64,13 +62,11 @@ void Profile::bulk_add_{var}(std::vector<std::pair<uint64_t, uint64_t>>& tr, uin
   for(int i = 0; i < tr.size(); i++) {{
     Seeker seeker(b, tr[i].first, tr[i].second);
     seeker.ReadString(&{var}[i], tr[i].second);
-    sum += tr[i].second;
   }}
-  print("{var}",sum);
 }}
 """
     file.write(str)
     file.close()
 
 
-parallel()
+sequential()

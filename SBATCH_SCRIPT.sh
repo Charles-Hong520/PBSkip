@@ -9,6 +9,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --job-name="seq and par parse zz.prof"
 #SBATCH -p intel
+lscpu
 date
 module load cmake
 module load gcc
@@ -32,11 +33,20 @@ mkdir build
 cd build
 cmake ..
 make
-cd ../../..
+cd ../../pthreads/
+rm -rf build
+mkdir build
+cd build
+cmake ..
+make
+cd ../../../
+echo "------------------Running the pthreads version---------------------"
+for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
 echo "------------------Running the Sequential verison-------------------"
 for i in {1..10}; do ./src/sequential/build/ProfileProject; done
 echo "------------------Running the Parallel verison---------------------"
 for i in {1..10}; do ./src/parallel/build/ProfileProject; done
 echo "------------------Running the Google API verison-------------------"
 for i in {1..10}; do ./src/google_api/build/ProfileProject; done
+
 hostname

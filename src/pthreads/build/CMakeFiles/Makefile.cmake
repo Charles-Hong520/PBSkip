@@ -123,7 +123,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/opt/linux/rocky/8.x/x86_64/pkgs/protobuf/v23.4/lib64/cmake/utf8_range/utf8_range-config.cmake"
   "/opt/linux/rocky/8.x/x86_64/pkgs/protobuf/v23.4/lib64/cmake/utf8_range/utf8_range-targets-noconfig.cmake"
   "/opt/linux/rocky/8.x/x86_64/pkgs/protobuf/v23.4/lib64/cmake/utf8_range/utf8_range-targets.cmake"
-  "/rhome/dparm003/PBSkip/src/parallel/CMakeLists.txt"
+  "/rhome/chong039/PBSkip/src/pthreads/CMakeLists.txt"
   "CMakeFiles/3.27.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.27.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.1/CMakeSystem.cmake"

@@ -62,7 +62,7 @@ int main() {
 
   // parses our PBSkip object
 
-  // std::cout << "Parsing " << file << " with custom API" << std::endl;
+  // std::cout << "Parsing " << file << " with custom pthreads" << std::endl;
   // std::cout << "content size: " << content.size << std::endl;
   Seeker seeker(content, 0, content.size);
 
@@ -96,12 +96,6 @@ int main() {
 
   // std::cout << "Time for Google API parse: " << elapsed_seconds.count() << "s\n";
 
-  // google::protobuf::CodedInputStream* input = new google::protobuf::CodedInputStream(content.buffer, content.size);
-  // profile_correct.ParseFromCodedStream(input);
-
-  // std::string s_correct;
-  // parser.profile_correct.SerializeToString(&s_correct);
-  // cout << "size correct: " << s_correct.size() << endl;
 
   //-----------------------------------
   // parses our object into the google message object to verify correctness

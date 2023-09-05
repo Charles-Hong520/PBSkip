@@ -1,4 +1,4 @@
-# Install script for directory: /rhome/dparm003/PBSkip/src/parallel
+# Install script for directory: /rhome/chong039/PBSkip/src/pthreads
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/rhome/dparm003/PBSkip/src/parallel/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/rhome/chong039/PBSkip/src/pthreads/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
