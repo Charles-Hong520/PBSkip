@@ -1,0 +1,237 @@
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              64
+On-line CPU(s) list: 0-63
+Thread(s) per core:  2
+Core(s) per socket:  16
+Socket(s):           2
+NUMA node(s):        2
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               79
+Model name:          Intel(R) Xeon(R) CPU E5-2683 v4 @ 2.10GHz
+Stepping:            1
+CPU MHz:             3000.000
+CPU max MHz:         3000.0000
+CPU min MHz:         1200.0000
+BogoMIPS:            4190.15
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            40960K
+NUMA node0 CPU(s):   0-15,32-47
+NUMA node1 CPU(s):   16-31,48-63
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cdp_l3 invpcid_single pti intel_ppin fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm rdt_a rdseed adx smap intel_pt xsaveopt cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts
+Wed Sep  6 14:35:21 PDT 2023
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/chong039/PBSkip/src/sequential/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/chong039/PBSkip/src/generated/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/chong039/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/chong039/PBSkip/src/parallel/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/chong039/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/chong039/PBSkip/src/google_api/build
+[ 33%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 66%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/chong039/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+-- The C compiler identification is GNU 9.2.1
+-- The CXX compiler identification is GNU 9.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /opt/rh/gcc-toolset-9/root/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /opt/rh/gcc-toolset-9/root/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found ZLIB: /usr/lib64/libz.so (found version "1.2.11")  
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /rhome/chong039/PBSkip/src/pthreads/build
+[ 25%] Building CXX object CMakeFiles/ProfileProject.dir/testprofile.cpp.o
+[ 50%] Building CXX object CMakeFiles/ProfileProject.dir/profile.pbs.cpp.o
+[ 75%] Building CXX object CMakeFiles/ProfileProject.dir/rhome/chong039/PBSkip/src/schema/profile.pb.cc.o
+[100%] Linking CXX executable ProfileProject
+[100%] Built target ProfileProject
+------------------Running the 2 pthreads version-------------------
+threads: 2 master: 5.97869 time: 23.7982s
+threads: 2 master: 5.0616 time: 23.0208s
+threads: 2 master: 5.07307 time: 22.9051s
+threads: 2 master: 5.01958 time: 22.8613s
+threads: 2 master: 5.01168 time: 22.8479s
+threads: 2 master: 5.01239 time: 22.8419s
+threads: 2 master: 5.04979 time: 23.0425s
+threads: 2 master: 5.04877 time: 22.8666s
+threads: 2 master: 5.01075 time: 22.8917s
+threads: 2 master: 5.01203 time: 22.822s
+------------------Running the 4 pthreads version-------------------
+threads: 4 master: 5.03448 time: 15.4389s
+threads: 4 master: 5.03081 time: 15.6228s
+threads: 4 master: 5.03822 time: 15.4255s
+threads: 4 master: 5.02789 time: 15.499s
+threads: 4 master: 5.03424 time: 15.5787s
+threads: 4 master: 5.05382 time: 15.5118s
+threads: 4 master: 5.04642 time: 15.5581s
+threads: 4 master: 5.05745 time: 15.6464s
+threads: 4 master: 5.04403 time: 15.3689s
+threads: 4 master: 5.05218 time: 15.4449s
+------------------Running the 8 pthreads version-------------------
+threads: 8 master: 5.05707 time: 11.7763s
+threads: 8 master: 5.04311 time: 11.4388s
+threads: 8 master: 5.05921 time: 11.3994s
+threads: 8 master: 5.06439 time: 11.5076s
+threads: 8 master: 5.07694 time: 11.8072s
+threads: 8 master: 5.06238 time: 11.6501s
+threads: 8 master: 5.04242 time: 11.449s
+threads: 8 master: 5.02997 time: 11.4166s
+threads: 8 master: 5.07989 time: 11.5585s
+threads: 8 master: 5.08786 time: 11.6894s
+------------------Running the 16 pthreads version------------------
+threads: 16 master: 5.07998 time: 9.4111s
+threads: 16 master: 5.02366 time: 9.25409s
+threads: 16 master: 5.03144 time: 9.31199s
+threads: 16 master: 5.03129 time: 9.62777s
+threads: 16 master: 5.06119 time: 9.29615s
+threads: 16 master: 5.04771 time: 9.18281s
+threads: 16 master: 5.02107 time: 9.39664s
+threads: 16 master: 5.13718 time: 9.38525s
+threads: 16 master: 5.03656 time: 9.20778s
+threads: 16 master: 5.07122 time: 9.41122s
+------------------Running the 32 pthreads version------------------
+threads: 32 master: 5.04109 time: 9.72638s
+threads: 32 master: 5.07324 time: 9.67318s
+threads: 32 master: 5.04146 time: 9.60848s
+threads: 32 master: 5.07921 time: 9.86312s
+threads: 32 master: 5.04049 time: 9.69707s
+threads: 32 master: 5.03875 time: 9.57436s
+threads: 32 master: 5.02896 time: 9.54696s
+threads: 32 master: 5.04523 time: 9.46776s
+threads: 32 master: 5.03338 time: 9.54084s
+threads: 32 master: 5.01262 time: 9.41515s
+------------------Running the 64 pthreads version------------------
+threads: 64 master: 5.05313 time: 9.80912s
+threads: 64 master: 5.03287 time: 9.71706s
+threads: 64 master: 5.06328 time: 10.097s
+threads: 64 master: 5.09178 time: 9.77219s
+threads: 64 master: 5.05191 time: 9.73657s
+threads: 64 master: 5.08455 time: 9.9253s
+threads: 64 master: 5.05982 time: 9.79513s
+threads: 64 master: 5.07943 time: 10.9846s
+threads: 64 master: 5.0282 time: 9.51743s
+threads: 64 master: 5.06448 time: 9.81835s
+------------------Running the Sequential verison-------------------
+time: 34.773s
+time: 34.9845s
+time: 34.7307s
+time: 34.6951s
+time: 34.7227s
+time: 34.707s
+time: 34.7208s
+time: 34.6754s
+time: 34.7116s
+time: 34.7054s
+------------------Running the Parallel verison---------------------
+master: 5.04937 time: 9.18514s
+master: 5.13607 time: 9.18556s
+master: 5.07002 time: 9.1746s
+master: 5.12753 time: 9.28852s
+master: 5.07176 time: 10.0065s
+master: 5.13022 time: 9.87974s
+master: 5.0826 time: 9.09718s
+master: 5.06675 time: 9.9717s
+master: 5.06451 time: 9.19843s
+master: 5.11002 time: 9.20965s
+------------------Running the Google API verison-------------------
+time: 35.9902s
+time: 35.9888s
+time: 35.9838s
+time: 36.0057s
+time: 35.9511s
+time: 35.9739s
+time: 35.954s
+time: 37.409s
+time: 35.9284s
+time: 36.0107s
+i25
