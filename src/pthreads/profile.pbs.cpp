@@ -1,5 +1,4 @@
 #include "profile.pbs.h"
-#define NUM_THREADS 32
 namespace PBS {
 Profile::Profile() {
   drop_frames = 0;
@@ -9,6 +8,9 @@ Profile::Profile() {
   period_type = nullptr;
   period = 0;
   default_sample_type = 0;
+}
+void Profile::change_num_threads(int num_threads) {
+  NUM_THREADS = num_threads;
 }
 void Profile::add_sample_type(ValueType* sample_type) {
   this->sample_type.push_back(sample_type);
@@ -95,6 +97,8 @@ int64_t Profile::get_default_sample_type() {
   return this->default_sample_type;
 }
 bool Profile::parseProfile(Seeker& seek) {
+  auto start = std::chrono::high_resolution_clock::now();
+
   uint32_t tag = seek.ReadTag();
   uint32_t field_id, wire, len;
   while (tag != 0) {
@@ -168,6 +172,9 @@ bool Profile::parseProfile(Seeker& seek) {
   //   print(fid, v.size(), sum);
   // }
 
+  auto end = std::chrono::high_resolution_clock::now();
+  std::cout << "master: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000000.0 << " ";
+
   bulk_add_sample_type(tracker[1], seek.buffer);
   bulk_add_sample(tracker[2], seek.buffer);
   bulk_add_mapping(tracker[3], seek.buffer);
@@ -181,11 +188,16 @@ bool Profile::parseProfile(Seeker& seek) {
 
 // destructor for Profile for deleting all pointer and preventing memory leak
 Profile::~Profile() {
-  for (auto e : sample_type) delete e;
-  for (auto e : sample) delete e;
-  for (auto e : mapping) delete e;
-  for (auto e : location) delete e;
-  for (auto e : function) delete e;
+  for (auto e : sample_type)
+    if (e) delete e;
+  for (auto e : sample)
+    if (e) delete e;
+  for (auto e : mapping)
+    if (e) delete e;
+  for (auto e : location)
+    if (e) delete e;
+  for (auto e : function)
+    if (e) delete e;
 }
 
 ValueType::ValueType() {
@@ -750,15 +762,14 @@ bool Function::parseFunction(Seeker& seek) {
   return true;
 }
 
-
-  void Profile::bulk_add_sample_type(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+void Profile::bulk_add_sample_type(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   int sum = 0;
-    for(int i = 0; i < tr.size(); i++) {
-      Seeker seeker(b, tr[i].first, tr[i].second);
-      sample_type[i] = new ValueType();
-      sample_type[i]->parseValueType(seeker);
-    }
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    sample_type[i] = new ValueType();
+    sample_type[i]->parseValueType(seeker);
   }
+}
 
 void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   uint32_t n = sample.size();
@@ -805,36 +816,36 @@ void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, ui
   //   });
 }
 
-  void Profile::bulk_add_mapping(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+void Profile::bulk_add_mapping(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   int sum = 0;
-    for(int i = 0; i < tr.size(); i++) {
-      Seeker seeker(b, tr[i].first, tr[i].second);
-      mapping[i] = new Mapping();
-      mapping[i]->parseMapping(seeker);
-    }
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    mapping[i] = new Mapping();
+    mapping[i]->parseMapping(seeker);
   }
-  
-  void Profile::bulk_add_location(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+}
+
+void Profile::bulk_add_location(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   int sum = 0;
-    for(int i = 0; i < tr.size(); i++) {
-      Seeker seeker(b, tr[i].first, tr[i].second);
-      location[i] = new Location();
-      location[i]->parseLocation(seeker);
-    }
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    location[i] = new Location();
+    location[i]->parseLocation(seeker);
   }
-  
-  void Profile::bulk_add_function(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+}
+
+void Profile::bulk_add_function(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   int sum = 0;
-    for(int i = 0; i < tr.size(); i++) {
-      Seeker seeker(b, tr[i].first, tr[i].second);
-      function[i] = new Function();
-      function[i]->parseFunction(seeker);
-    }
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    function[i] = new Function();
+    function[i]->parseFunction(seeker);
   }
-  
+}
+
 void Profile::bulk_add_string_table(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
   int sum = 0;
-  for(int i = 0; i < tr.size(); i++) {
+  for (int i = 0; i < tr.size(); i++) {
     Seeker seeker(b, tr[i].first, tr[i].second);
     seeker.ReadString(&string_table[i], tr[i].second);
   }

@@ -14,9 +14,10 @@
 #include <iostream>
 #include <map>
 #include <sstream>
+#include <string>
 #include <vector>
 
-#include "../parallel/profile.pbs.h"
+#include "../pthreads/profile.pbs.h"
 #include "../schema/profile.pb.h"
 // #include <google/protobuf/port_undef.inc>
 
@@ -48,6 +49,11 @@ void cmp_msg(T* profile_custom, T* profile_correct, std::string type) {
 }
 
 int main() {
+  int PBS_NUM_THREADS = 2;
+  if (const auto env_p = std::getenv("PBS_NUM_THREADS")) {
+    PBS_NUM_THREADS = std::stoi(env_p);
+  }
+  std::cout << "threads: " << PBS_NUM_THREADS << " ";
   // std::cout << "---------------------Running the parallel version----------------------\n";
   std::string file = "dataset/zz.prof";
   Buffer content(file);
@@ -67,12 +73,12 @@ int main() {
   Seeker seeker(content, 0, content.size);
 
   PBS::Profile* pbs = new PBS::Profile();
+  pbs->change_num_threads(PBS_NUM_THREADS);
   seeker.curr = 0;
   start_T = std::chrono::system_clock::now();
   pbs->parseProfile(seeker);
   end_T = std::chrono::system_clock::now();
   elapsed_seconds = end_T - start_T;
-  delete pbs;
 
   // std::cout << "Time for custom parse in parallel:\n";
   // for (int i = 0; i < runs; i++) {
@@ -95,7 +101,6 @@ int main() {
   // elapsed_seconds = end_T - start_T;
 
   // std::cout << "Time for Google API parse: " << elapsed_seconds.count() << "s\n";
-
 
   //-----------------------------------
   // parses our object into the google message object to verify correctness
