@@ -9,6 +9,9 @@ Profile::Profile() {
   period = 0;
   default_sample_type = 0;
 }
+void Profile::change_num_threads(int num_threads) {
+  NUM_THREADS = num_threads;
+}
 void Profile::add_sample_type(ValueType* sample_type) {
   this->sample_type.push_back(sample_type);
 }
@@ -93,6 +96,31 @@ void Profile::set_default_sample_type(int64_t default_sample_type) {
 int64_t Profile::get_default_sample_type() {
   return this->default_sample_type;
 }
+void Profile::fillTracker(Seeker& seek) {
+  uint32_t tag = seek.ReadTag();
+  uint32_t field_id, wire, len;
+  while (tag != 0) {
+    field_id = tag >> 3;
+    wire = tag & 7;
+    uint64_t i;
+    if (wire == 0) {
+      seek.ReadVarint64(&i);
+    } else if (wire == 2) {
+      if (field_id == 11) {
+        seek.ReadVarint32(&len);
+        seek.Skip(len);
+      } else {
+        if (!seek.ReadVarint32(&len)) {
+          handle_error("read len 32 wrong" + std::to_string(seek.curr));
+        }
+        tracker[field_id].push_back({seek.curr, len});
+        seek.Skip(len);
+      }
+    }
+    tag = seek.ReadTag();
+  }
+}
+
 bool Profile::parseProfile(Seeker& seek) {
   uint32_t tag = seek.ReadTag();
   while (tag != 0) {
@@ -238,6 +266,20 @@ bool Profile::parseProfile(Seeker& seek) {
     tag = seek.ReadTag();
   }
   return true;
+}
+
+// destructor for Profile for deleting all pointer and preventing memory leak
+Profile::~Profile() {
+  for (auto e : sample_type)
+    if (e) delete e;
+  for (auto e : sample)
+    if (e) delete e;
+  for (auto e : mapping)
+    if (e) delete e;
+  for (auto e : location)
+    if (e) delete e;
+  for (auto e : function)
+    if (e) delete e;
 }
 
 ValueType::ValueType() {
@@ -801,4 +843,160 @@ bool Function::parseFunction(Seeker& seek) {
   }
   return true;
 }
+
+void Profile::bulk_add_sample_type(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    sample_type[i] = new ValueType();
+    sample_type[i]->parseValueType(seeker);
+  }
+}
+
+void Profile::bulk_add_sample(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  uint32_t n = sample.size();
+  uint32_t sum = 0;
+  std::vector<std::thread> threads(NUM_THREADS);
+  std::vector<int> start_indices(1, 0);
+  // first is loc, second is len
+  for (int i = 0; i < n; i++) {
+    sum += tr[i].second;
+  }
+  uint32_t partition_size = sum / NUM_THREADS;
+  sum = 0;
+  for (int i = 0; i < n; i++) {
+    sum += tr[i].second;
+    if (sum >= partition_size) {
+      start_indices.push_back(i + 1);
+      sum = 0;
+    }
+  }
+  start_indices.push_back(n);
+
+  auto parseSampleRange = [&](int i) {
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    Seeker seeker(b, 0, 0);
+    for (int j = start_indices[i]; j < start_indices[i + 1]; j++) {
+      seeker.curr = tr[j].first;
+      seeker.end = seeker.curr + tr[j].second;
+      sample[j]->parseSample(seeker);
+    }
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    // print("thread" + std::to_string(i) + ": " + std::to_string(duration.count() / 1000000.0) + "s");
+  };
+  for (int i = 0; i < NUM_THREADS; i++) {
+    threads[i] = std::thread(parseSampleRange, i);
+  }
+  for (auto& thread : threads) {
+    thread.join();
+  }
+  //   parlay::parallel_for(0, tr.size(), [&](int i) {
+  //     Seeker seeker(b, tr[i].first, tr[i].second);
+  //     sample[i]->parseSample(seeker);
+  //   });
+}
+
+void Profile::bulk_add_mapping(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    mapping[i] = new Mapping();
+    mapping[i]->parseMapping(seeker);
+  }
+}
+
+void Profile::bulk_add_location(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    location[i] = new Location();
+    location[i]->parseLocation(seeker);
+  }
+}
+
+void Profile::bulk_add_function(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    function[i] = new Function();
+    function[i]->parseFunction(seeker);
+  }
+}
+
+void Profile::bulk_add_string_table(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  int sum = 0;
+  for (int i = 0; i < tr.size(); i++) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    seeker.ReadString(&string_table[i], tr[i].second);
+  }
+}
+
+void Profile::bulk_add_comment(std::vector<std::pair<uint64_t, uint64_t>>& tr, uint8_t* b) {
+  parlay::parallel_for(0, tr.size(), [&](int i) {
+    Seeker seeker(b, tr[i].first, tr[i].second);
+    uint64_t i64;
+    while (seeker.curr < seeker.end) {
+      seeker.ReadVarint64(&i64);
+      add_comment(i64);
+    }
+  });
+}
+void Profile::clear() {
+  if (period_type)
+    delete period_type;
+  period_type = 0;
+  for (auto e : sample_type)
+    if (e) delete e;
+  for (auto e : sample)
+    if (e) delete e;
+  for (auto e : mapping)
+    if (e) delete e;
+  for (auto e : location)
+    if (e) delete e;
+  for (auto e : function)
+    if (e) delete e;
+  sample_type.clear();
+  sample.clear();
+  mapping.clear();
+  location.clear();
+  function.clear();
+  string_table.clear();
+  comment.clear();
+  drop_frames = 0;
+  keep_frames = 0;
+  time_nanos = 0;
+  period = 0;
+  default_sample_type = 0;
+}
+
+bool Profile::checkValidStart(Seeker& seek) {
+  int succskip = 0;
+  int succskiplim = 1000;
+  uint32_t tag = seek.ReadTag();
+  uint32_t field_id, wire, len;
+  uint64_t i;
+
+  do {
+    field_id = tag >> 3;
+    wire = tag & 7;
+    if (!field_id_set.count(wire) || !field_id_set[wire].count(field_id))
+      return false;
+    else if (wire == 2) {
+      if (!seek.ReadVarint32(&len)) return false;
+      seek.Skip(len);
+      if (succskip < succskiplim) {
+        return true;
+      }
+      succskip++;
+    } else if (wire == 0) {
+      if (!seek.ReadVarint64(&i)) return false;
+    }
+    tag = seek.ReadTag();
+  } while (tag != 0);
+  print(seek.curr);
+  return true;
+}
+
 }  // namespace PBS
