@@ -98,7 +98,7 @@ int64_t Profile::get_default_sample_type() {
 }
 void Profile::fillTracker(Seeker& seek) {
     uint32_t tag = seek.ReadTag();
-    uint32_t field_id, wire, len;
+    uint32_t field_id, wire, len, tagpos = 0;
     while (tag != 0) {
         field_id = tag >> 3;
         wire = tag & 7;
@@ -108,30 +108,38 @@ void Profile::fillTracker(Seeker& seek) {
         } else if (wire == 2) {
             if (field_id == 11) {
                 seek.ReadVarint32(&len);
+                tracker[field_id].push_back({tagpos, len});
                 seek.Skip(len);
             } else {
                 if (!seek.ReadVarint32(&len)) {
                     handle_error("read len 32 wrong" + std::to_string(seek.curr));
                 }
-                tracker[field_id].push_back({seek.curr, len});
+                tracker[field_id].push_back({tagpos, len});
                 seek.Skip(len);
             }
         }
+        tagpos = seek.curr;
         tag = seek.ReadTag();
     }
 }
 
 bool Profile::parseProfile(Seeker& seek) {
+    uint32_t seekinit = seek.curr;
+    int z = 0;
     uint32_t tag = seek.ReadTag();
+
     while (tag != 0) {
         uint32_t field_id = tag >> 3;
         uint32_t wire = tag & 7;
 
+        if (seekinit == 22539 && z++ < 10) print(seek.curr, field_id, wire);
+        // TODO GIVE ERROR CHECKING FOR ALL PARSE FUNCS!
+        if (wire != 0 && wire != 2) return false;
         switch (field_id) {
             case 1:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     ValueType* msg_ = new ValueType();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -142,7 +150,7 @@ bool Profile::parseProfile(Seeker& seek) {
             case 2:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     Sample* msg_ = new Sample();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -153,7 +161,7 @@ bool Profile::parseProfile(Seeker& seek) {
             case 3:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     Mapping* msg_ = new Mapping();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -164,7 +172,7 @@ bool Profile::parseProfile(Seeker& seek) {
             case 4:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     Location* msg_ = new Location();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -175,7 +183,7 @@ bool Profile::parseProfile(Seeker& seek) {
             case 5:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     Function* msg_ = new Function();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -186,80 +194,84 @@ bool Profile::parseProfile(Seeker& seek) {
             case 6:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     std::string buffer;
-                    seek.ReadString(&buffer, len);
+                    if (!seek.ReadString(&buffer, len)) return false;
                     add_string_table(buffer);
                 }
                 break;
             case 7:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_drop_frames(i);
                 }
                 break;
             case 8:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_keep_frames(i);
                 }
                 break;
             case 9:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_time_nanos(i);
                 }
                 break;
             case 10:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_duration_nanos(i);
                 }
                 break;
             case 11:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     ValueType* msg_ = new ValueType();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
-                    msg_->parseValueType(copyseeker);
+                    if (!msg_->parseValueType(copyseeker)) return false;
                     set_period_type(msg_);
                 }
                 break;
             case 12:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_period(i);
                 }
                 break;
             case 13:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     uint64_t i;
                     uint32_t endOfMsg = seek.curr + len;
                     while (seek.curr < endOfMsg) {
-                        seek.ReadVarint64(&i);
+                        if (!seek.ReadVarint64(&i)) return false;
                         add_comment(i);
                     }
                 } else if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     add_comment(i);
                 }
                 break;
             case 14:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_default_sample_type(i);
                 }
+                break;
+            default:
+                print("defaulted parsing profile", tag, wire, seek.curr);
+                return false;
                 break;
         }
         // print("Profile",seek.curr, field_id);
@@ -300,24 +312,29 @@ int64_t ValueType::get_unit() {
 }
 bool ValueType::parseValueType(Seeker& seek) {
     uint32_t tag = seek.ReadTag();
+    if (tag == 0) return false;
     while (tag != 0) {
         uint32_t field_id = tag >> 3;
         uint32_t wire = tag & 7;
-
+        if (wire != 2 && wire != 0) return false;
         switch (field_id) {
             case 1:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_type(i);
                 }
                 break;
             case 2:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_unit(i);
                 }
+                break;
+            default:
+                print("default ValueType");
+                return false;
                 break;
         }
         // print("ValueType",seek.curr, field_id);
@@ -971,32 +988,52 @@ void Profile::clear() {
     default_sample_type = 0;
 }
 
+bool Profile::checkValidStartHard(Seeker& seek) {
+    // 2 threads for now, we will try to parse from middle to the end.
+    print("hardcheck start", seek.curr, seek.end);
+    Profile* prof2 = new Profile();
+    bool res = prof2->parseProfile(seek);
+    return res;
+}
+
 bool Profile::checkValidStart(Seeker& seek) {
-    int succskip = 0;
-    int succskiplim = 1000;
+    uint32_t seek_init = seek.curr;
+    uint64_t succskip = 0;
+    uint64_t succskiplim = 10;
+
+    bool flag = (seek.curr == 22539);
+
     uint32_t tag = seek.ReadTag();
     uint32_t field_id, wire, len;
     uint64_t i;
 
-    do {
+    while (tag != 0) {
         field_id = tag >> 3;
         wire = tag & 7;
-        if (!field_id_set.count(wire) || !field_id_set[wire].count(field_id))
+        auto it = field_id_set.find(wire);
+        if (it == field_id_set.end()) {
             return false;
-        else if (wire == 2) {
-            if (!seek.ReadVarint32(&len)) return false;
-            seek.Skip(len);
-            if (succskip < succskiplim) {
-                return true;
+        } else if (it->second.count(field_id) == 0) {
+            return false;
+        } else {
+            if (wire == 2) {
+                if (!seek.ReadVarint32(&len)) return false;
+                seek.Skip(len);
+                if (succskip > succskiplim) {
+                    seek.curr = seek_init;
+                    bool hardcheck = checkValidStartHard(seek);
+                    // print("hardcheck at", seek_init, hardcheck);
+                    return hardcheck;
+                }
+                succskip++;
+            } else if (wire == 0) {
+                if (!seek.ReadVarint64(&i)) return false;
             }
-            succskip++;
-        } else if (wire == 0) {
-            if (!seek.ReadVarint64(&i)) return false;
         }
         tag = seek.ReadTag();
-    } while (tag != 0);
-    print(seek.curr);
+    }
+
+    print("LAST CURR", seek_init);
     return true;
 }
-
 }  // namespace PBS

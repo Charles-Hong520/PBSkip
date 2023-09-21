@@ -48,34 +48,58 @@ int main() {
     auto tr = pbs->getTracker();
     std::map<uint64_t, uint64_t> pos_to_fi;
 
+    const int startCheck = content.size / 2;
+    const int endCheck = content.size - 1;
+    std::set<int> st;
+
+    print(startCheck);
+
     int z = 0;
     for (const auto& [field_id, vpos] : tr) {
-        std::cout << "field_id: " << field_id << ", size: " << vpos.size() << std::endl;
+        // std::cout << "field_id: " << field_id << ", size: " << vpos.size() << std::endl;
         for (auto& [pos, len] : vpos) {
             pos_to_fi[pos] = len;
-            if (pos >= 1078689392 - 100 && pos <= 1078689392 + 400) {
-                print("field_id", field_id, "pos:", pos, "len:", len);
+            if (startCheck <= pos && pos <= endCheck) {
+                st.insert(pos);
+                // if (z++ < 10) print("good:", pos, "fi:", field_id);
             }
-            z++;
         }
     }
-    // 1078689392 299
-    const int startCheck = 1078689392 - 10;
-    const int endCheck = 1078689392 + 300;
     start_T = std::chrono::system_clock::now();
-    for (int i = startCheck; i < endCheck; i++) {
-        seeker.curr = i;
-        seeker.end = content.size;
-        if (pbs->checkValidStart(seeker)) {
-            uint64_t temp;
-            seeker.ReadVarint64(&temp);
-            print("valid at", i, "value:", temp);
-        }
-    }
-    end_T = std::chrono::system_clock::now();
 
-    seeker.curr = 0;
-    // pbs->parseProfile(seeker);
+    auto lf = [&]() {
+        seeker.curr = 0;
+        seeker.end = 542006431;
+        auto start_T = std::chrono::system_clock::now();
+        pbs->parseProfile(seeker);
+        auto end_T = std::chrono::system_clock::now();
+        auto elapsed_seconds = end_T - start_T;
+        std::cout << "time1: " << elapsed_seconds.count() << "s\n";
+    };
+
+    auto rf = [&]() {
+        auto start_T = std::chrono::system_clock::now();
+        for (int i = startCheck; i <= endCheck; i++) {
+            seeker.curr = i;
+            seeker.end = content.size;
+            if (pbs->checkValidStart(seeker)) {
+                if (st.count(i) == 0) {
+                    print("invalid at", i);
+                    uint32_t tag = seeker.ReadTag();
+                    print(tag >> 3, tag & 7);
+                } else {
+                    print("valid at", i);
+                    break;
+                }
+            }
+        }
+        auto end_T = std::chrono::system_clock::now();
+        auto elapsed_seconds = end_T - start_T;
+        std::cout << "time2: " << elapsed_seconds.count() << "s\n";
+    };
+
+    parlay::par_do(lf, rf);
+    end_T = std::chrono::system_clock::now();
     elapsed_seconds = end_T - start_T;
-    std::cout << "time: " << elapsed_seconds.count() << "s\n";
+    std::cout << "timetot: " << elapsed_seconds.count() << "s\n";
 }
