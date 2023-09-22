@@ -132,7 +132,6 @@ bool Profile::parseProfile(Seeker& seek) {
         uint32_t field_id = tag >> 3;
         uint32_t wire = tag & 7;
 
-        if (seekinit == 22539 && z++ < 10) print(seek.curr, field_id, wire);
         // TODO GIVE ERROR CHECKING FOR ALL PARSE FUNCS!
         if (wire != 0 && wire != 2) return false;
         switch (field_id) {
@@ -990,7 +989,7 @@ void Profile::clear() {
 
 bool Profile::checkValidStartHard(Seeker& seek) {
     // 2 threads for now, we will try to parse from middle to the end.
-    print("hardcheck start", seek.curr, seek.end);
+    // print("hardcheck start", seek.curr, seek.end);
     prof2 = new Profile();
     bool res = prof2->parseProfile(seek);
     if (!res) delete prof2;

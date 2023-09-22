@@ -27,13 +27,13 @@ int main() {
     if (const auto env_p = std::getenv("PBS_NUM_THREADS")) {
         PBS_NUM_THREADS = std::stoi(env_p);
     }
-    std::cout << "threads: " << PBS_NUM_THREADS << " \n";
+    // std::cout << "threads: " << PBS_NUM_THREADS << " \n";
     // std::cout << "---------------------Running the parallel version----------------------\n";
     std::string file = "dataset/zz.prof";
     Buffer content(file);
 
-    std::chrono::time_point<std::chrono::system_clock> start_T, end_T;
-    std::chrono::duration<double> elapsed_seconds;
+    std::chrono::time_point<std::chrono::system_clock> start_T, end_T, start2, end2;
+    std::chrono::duration<double> elapsed_seconds, e2;
     //-----------------------------------
 
     // parses our PBSkip object
@@ -51,8 +51,6 @@ int main() {
     const int startCheck = content.size / 2;
     const int endCheck = content.size - 1;
     std::set<int> st;
-
-    print(startCheck);
 
     int z = 0;
     for (const auto& [field_id, vpos] : tr) {
@@ -92,7 +90,7 @@ int main() {
                     uint32_t tag = seeker.ReadTag();
                     print(tag >> 3, tag & 7);
                 } else {
-                    print("valid at", i);
+                    // print("valid at", i);
                     break;
                 }
             }
@@ -103,10 +101,13 @@ int main() {
     };
 
     parlay::par_do(lf, rf);
+    start2 = std::chrono::system_clock::now();
     pbs->MergeParallel();
+    end2 = std::chrono::system_clock::now();
     end_T = std::chrono::system_clock::now();
+    e2 = end2 - start2;
     elapsed_seconds = end_T - start_T;
-    std::cout << "timetot: " << elapsed_seconds.count() << "s\n";
+    print("merge:", e2.count(), "time:", elapsed_seconds.count(), "s");
 
     // parses google protobuf message object
 
