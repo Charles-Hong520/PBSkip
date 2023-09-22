@@ -104,10 +104,10 @@ void Profile::fillTracker(Seeker& seek) {
         wire = tag & 7;
         uint64_t i;
         if (wire == 0) {
-            seek.ReadVarint64(&i);
+            if (!seek.ReadVarint64(&i)) return;
         } else if (wire == 2) {
             if (field_id == 11) {
-                seek.ReadVarint32(&len);
+                if (!seek.ReadVarint32(&len)) return;
                 tracker[field_id].push_back({tagpos, len});
                 seek.Skip(len);
             } else {
@@ -372,39 +372,39 @@ bool Sample::parseSample(Seeker& seek) {
             case 1:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     uint64_t i;
                     uint32_t endOfMsg = seek.curr + len;
                     while (seek.curr < endOfMsg) {
-                        seek.ReadVarint64(&i);
+                        if (!seek.ReadVarint64(&i)) return false;
                         add_location_id(i);
                     }
                 } else if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     add_location_id(i);
                 }
                 break;
             case 2:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     uint64_t i;
                     uint32_t endOfMsg = seek.curr + len;
                     while (seek.curr < endOfMsg) {
-                        seek.ReadVarint64(&i);
+                        if (!seek.ReadVarint64(&i)) return false;
                         add_value(i);
                     }
                 } else if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     add_value(i);
                 }
                 break;
             case 3:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     Label* msg_ = new Label();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -458,28 +458,28 @@ bool Label::parseLabel(Seeker& seek) {
             case 1:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_key(i);
                 }
                 break;
             case 2:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_str(i);
                 }
                 break;
             case 3:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_num(i);
                 }
                 break;
             case 4:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_num_unit(i);
                 }
                 break;
@@ -571,70 +571,70 @@ bool Mapping::parseMapping(Seeker& seek) {
             case 1:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_id(i);
                 }
                 break;
             case 2:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_memory_start(i);
                 }
                 break;
             case 3:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_memory_limit(i);
                 }
                 break;
             case 4:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_file_offset(i);
                 }
                 break;
             case 5:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_filename(i);
                 }
                 break;
             case 6:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_build_id(i);
                 }
                 break;
             case 7:
                 if (wire == 0) {
                     uint32_t i;
-                    seek.ReadVarint32(&i);
+                    if (!seek.ReadVarint32(&i)) return false;
                     set_has_functions(i);
                 }
                 break;
             case 8:
                 if (wire == 0) {
                     uint32_t i;
-                    seek.ReadVarint32(&i);
+                    if (!seek.ReadVarint32(&i)) return false;
                     set_has_filenames(i);
                 }
                 break;
             case 9:
                 if (wire == 0) {
                     uint32_t i;
-                    seek.ReadVarint32(&i);
+                    if (!seek.ReadVarint32(&i)) return false;
                     set_has_line_numbers(i);
                 }
                 break;
             case 10:
                 if (wire == 0) {
                     uint32_t i;
-                    seek.ReadVarint32(&i);
+                    if (!seek.ReadVarint32(&i)) return false;
                     set_has_inline_frames(i);
                 }
                 break;
@@ -690,28 +690,28 @@ bool Location::parseLocation(Seeker& seek) {
             case 1:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_id(i);
                 }
                 break;
             case 2:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_mapping_id(i);
                 }
                 break;
             case 3:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_address(i);
                 }
                 break;
             case 4:
                 if (wire == 2) {
                     uint32_t len;
-                    seek.ReadVarint32(&len);
+                    if (!seek.ReadVarint32(&len)) return false;
                     Line* msg_ = new Line();
                     Seeker copyseeker(seek, len);
                     seek.curr += len;
@@ -722,7 +722,7 @@ bool Location::parseLocation(Seeker& seek) {
             case 5:
                 if (wire == 0) {
                     uint32_t i;
-                    seek.ReadVarint32(&i);
+                    if (!seek.ReadVarint32(&i)) return false;
                     set_is_folded(i);
                 }
                 break;
@@ -758,14 +758,14 @@ bool Line::parseLine(Seeker& seek) {
             case 1:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_function_id(i);
                 }
                 break;
             case 2:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_line(i);
                 }
                 break;
@@ -822,35 +822,35 @@ bool Function::parseFunction(Seeker& seek) {
             case 1:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_id(i);
                 }
                 break;
             case 2:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_name(i);
                 }
                 break;
             case 3:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_system_name(i);
                 }
                 break;
             case 4:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_filename(i);
                 }
                 break;
             case 5:
                 if (wire == 0) {
                     uint64_t i;
-                    seek.ReadVarint64(&i);
+                    if (!seek.ReadVarint64(&i)) return false;
                     set_start_line(i);
                 }
                 break;
