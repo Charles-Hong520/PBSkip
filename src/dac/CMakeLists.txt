@@ -11,7 +11,7 @@ find_package(Protobuf REQUIRED CONFIG)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 set(SOURCES
-    testprofile.cpp
+    time.cpp
     profile.pbs.cpp
     ../schema/profile.pb.cc
 )
