@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include "parallel.h"
+
 inline void print() { std::cout << '\n'; }
 
 template <typename T, typename... Args>
@@ -115,5 +117,15 @@ struct Seeker {
         return true;
     }
 };
+
+template <typename T>
+void MergeVector(std::vector<T>& v1, const std::vector<T>& v2) {
+    int add_size = v2.size();
+    int v1end = v1.size();
+    v1.resize(v1end + add_size);
+    parlay::parallel_for(0, add_size, [&](int i) {
+        v1[v1end + i] = v2[i];
+    });
+}
 
 #endif

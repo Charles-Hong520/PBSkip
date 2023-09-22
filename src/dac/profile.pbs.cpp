@@ -991,8 +991,9 @@ void Profile::clear() {
 bool Profile::checkValidStartHard(Seeker& seek) {
     // 2 threads for now, we will try to parse from middle to the end.
     print("hardcheck start", seek.curr, seek.end);
-    Profile* prof2 = new Profile();
+    prof2 = new Profile();
     bool res = prof2->parseProfile(seek);
+    if (!res) delete prof2;
     return res;
 }
 
@@ -1036,4 +1037,21 @@ bool Profile::checkValidStart(Seeker& seek) {
     print("LAST CURR", seek_init);
     return true;
 }
+
+void Profile::MergeParallel() {
+    MergeVector(this->sample_type, prof2->sample_type);
+    MergeVector(this->sample, prof2->sample);
+    MergeVector(this->mapping, prof2->mapping);
+    MergeVector(this->location, prof2->location);
+    MergeVector(this->function, prof2->function);
+    MergeVector(this->string_table, prof2->string_table);
+    if (this->drop_frames == 0) this->drop_frames = prof2->drop_frames;
+    if (this->keep_frames == 0) this->keep_frames = prof2->keep_frames;
+    if (this->time_nanos == 0) this->time_nanos = prof2->time_nanos;
+    if (this->duration_nanos == 0) this->duration_nanos = prof2->duration_nanos;
+    if (this->period_type == 0) this->period_type = prof2->period_type;
+    if (this->period == 0) this->period = prof2->period;
+    if (this->default_sample_type == 0) this->default_sample_type = prof2->default_sample_type;
+}
+
 }  // namespace PBS

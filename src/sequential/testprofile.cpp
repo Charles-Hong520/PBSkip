@@ -63,7 +63,8 @@ int main() {
     //-----------------------------------
 
     // // parses google protobuf message object
-
+    // pp::Profile* profile_correct = new pp::Profile();
+    // pp::Profile* profile_custom = new pp::Profile();
     // std::cout << "Parsing " << file << " with Google API" << std::endl;
     // std::fstream cinput(file, std::ios::in | std::ios::binary);
 
@@ -73,13 +74,6 @@ int main() {
     // elapsed_seconds = end_T - start_T;
 
     // std::cout << "Time for Google API parse: " << elapsed_seconds.count() << "s\n";
-
-    // // google::protobuf::CodedInputStream* input = new google::protobuf::CodedInputStream(content.buffer, content.size);
-    // // profile_correct.ParseFromCodedStream(input);
-
-    // // std::string s_correct;
-    // // parser.profile_correct.SerializeToString(&s_correct);
-    // // cout << "size correct: " << s_correct.size() << endl;
 
     // //-----------------------------------
     // // parses our object into the google message object to verify correctness

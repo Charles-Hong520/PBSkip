@@ -34,6 +34,8 @@ class Profile {
         {0, {7, 8, 9, 10, 12, 13, 14}},
         {2, {1, 2, 3, 4, 5, 6, 11, 13}}};
 
+    Profile* prof2;
+
    public:
     Profile();
     std::map<uint32_t, std::vector<std::pair<uint64_t, uint64_t>>> getTracker() {
@@ -43,6 +45,7 @@ class Profile {
     bool checkValidStart(Seeker&);
     bool checkValidStartHard(Seeker& seek);
     void fillTracker(Seeker& seek);
+    void MergeParallel();
 
     void change_num_threads(int);
 
