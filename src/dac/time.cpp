@@ -68,17 +68,21 @@ int main() {
     start_T = std::chrono::system_clock::now();
 
     auto lf = [&]() {
+        Seeker seeker(content, 0, content.size);
         seeker.curr = 0;
         seeker.end = 542006431;
-        auto start_T = std::chrono::system_clock::now();
-        pbs->parseProfile(seeker);
-        auto end_T = std::chrono::system_clock::now();
-        auto elapsed_seconds = end_T - start_T;
+        std::chrono::time_point<std::chrono::system_clock> start_T = std::chrono::system_clock::now();
+        if (!pbs->parseProfile(seeker)) {
+            std::cout << "false\n";
+        }
+        std::chrono::time_point<std::chrono::system_clock> end_T = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end_T - start_T;
         std::cout << "time1: " << elapsed_seconds.count() << "s\n";
     };
 
     auto rf = [&]() {
-        auto start_T = std::chrono::system_clock::now();
+        Seeker seeker(content, 0, content.size);
+        std::chrono::time_point<std::chrono::system_clock> start_T = std::chrono::system_clock::now();
         for (int i = startCheck; i <= endCheck; i++) {
             seeker.curr = i;
             seeker.end = content.size;
@@ -93,8 +97,8 @@ int main() {
                 }
             }
         }
-        auto end_T = std::chrono::system_clock::now();
-        auto elapsed_seconds = end_T - start_T;
+        std::chrono::time_point<std::chrono::system_clock> end_T = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end_T - start_T;
         std::cout << "time2: " << elapsed_seconds.count() << "s\n";
     };
 

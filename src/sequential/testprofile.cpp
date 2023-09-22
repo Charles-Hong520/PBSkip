@@ -16,12 +16,12 @@
 #include <sstream>
 #include <vector>
 
-#include "../generated/profile.pbs.h"
 #include "../schema/profile.pb.h"
+#include "../sequential/profile.pbs.h"
 // #include <google/protobuf/port_undef.inc>
 
 /*
-g++ -std=c++17 src/generated/profile.pbs.cpp src/schema/profile.pb.cc src/sequential/testprofile.cpp -lprotobuf -lpthread -O3 -o src/sequential/testprofile && ./src/sequential/testprofile
+g++ -std=c++17 src/sequential/profile.pbs.cpp src/schema/profile.pb.cc src/sequential/testprofile.cpp -lprotobuf -lpthread -O3 -o src/sequential/testprofile && ./src/sequential/testprofile
 */
 
 #define pp perftools::profiles
