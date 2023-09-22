@@ -12,7 +12,7 @@ include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 set(SOURCES
     testprofile.cpp
-    ../generated/profile.pbs.cpp
+    ../sequential/profile.pbs.cpp
     ../schema/profile.pb.cc
 )
 
