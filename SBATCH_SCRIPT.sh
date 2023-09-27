@@ -46,21 +46,21 @@ cd build
 cmake ..
 make
 cd ../../../
-# export PBS_NUM_THREADS=2
-# echo "------------------Running the 2 pthreads version-------------------"
-# for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
-# export PBS_NUM_THREADS=4
-# echo "------------------Running the 4 pthreads version-------------------"
-# for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
-# export PBS_NUM_THREADS=8
-# echo "------------------Running the 8 pthreads version-------------------"
-# for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
-# export PBS_NUM_THREADS=16
-# echo "------------------Running the 16 pthreads version------------------"
-# for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
-# export PBS_NUM_THREADS=32
-# echo "------------------Running the 32 pthreads version------------------"
-# for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
+export PBS_NUM_THREADS=2
+echo "------------------Running the 2 pthreads version-------------------"
+for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
+export PBS_NUM_THREADS=4
+echo "------------------Running the 4 pthreads version-------------------"
+for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
+export PBS_NUM_THREADS=8
+echo "------------------Running the 8 pthreads version-------------------"
+for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
+export PBS_NUM_THREADS=16
+echo "------------------Running the 16 pthreads version------------------"
+for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
+export PBS_NUM_THREADS=32
+echo "------------------Running the 32 pthreads version------------------"
+for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
 export PBS_NUM_THREADS=64
 echo "------------------Running the 64 pthreads version------------------"
 for i in {1..10}; do ./src/pthreads/build/ProfileProject; done
