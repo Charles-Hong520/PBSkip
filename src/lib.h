@@ -45,6 +45,8 @@ struct Buffer {
   }
 };
 
+
+// A more appropriate name would probably be file descriptor
 struct Seeker {
   uint8_t* buffer;
   uint32_t curr;
@@ -71,6 +73,7 @@ struct Seeker {
   inline void Skip(uint32_t len) {
     this->curr += len;
   }
+  //could be optimized to be faster. Check google's implementations
   inline bool ReadVarint32(uint32_t* i) {
     *i = 0;
     uint32_t shift = 0;

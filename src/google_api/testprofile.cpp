@@ -43,7 +43,7 @@ int main() {
     std::fstream cinput(file, std::ios::in | std::ios::binary);
 
     start_T = std::chrono::system_clock::now();
-    profile_correct->ParseFromIstream(&cinput);
+    profile_correct->ParseFromIstream(&cinput); //performs parsing
     end_T = std::chrono::system_clock::now();
     elapsed_seconds = end_T - start_T;
     profile_correct->Clear();

@@ -1,8 +1,6 @@
-# generate only 1 .pbs.h and .pbs.cpp file for each .proto file that follows the naming convention and pattern from ./sequencial folder for person
-
-import os
-import sys
-import re
+# generate only 1 .pbs.h and .pbs.cpp file for each .proto file that follows the naming convention and pattern from ./sequential folder for person
+# this generation file is not fully tested and can lead to generating bugs. So far it can generate Profile correctly
+import os,sys,re
 
 # read the .proto file as lines
 

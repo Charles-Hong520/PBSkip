@@ -53,6 +53,8 @@ int main() {
     std::set<int> st;
 
     int z = 0;
+
+    //used for testing to check for valid positions
     for (const auto& [field_id, vpos] : tr) {
         // std::cout << "field_id: " << field_id << ", size: " << vpos.size() << std::endl;
         for (auto& [pos, len] : vpos) {
@@ -65,10 +67,11 @@ int main() {
     }
     start_T = std::chrono::system_clock::now();
 
+    // good thread that parses correctly up to n/2
     auto lf = [&]() {
         Seeker seeker(content, 0, content.size);
         seeker.curr = 0;
-        seeker.end = 542006431;
+        seeker.end = content.size;
         std::chrono::time_point<std::chrono::system_clock> start_T = std::chrono::system_clock::now();
         if (!pbs->parseProfile(seeker)) {
             std::cout << "false\n";
@@ -77,14 +80,23 @@ int main() {
         std::chrono::duration<double> elapsed_seconds = end_T - start_T;
         std::cout << "time1: " << elapsed_seconds.count() << "s\n";
     };
-
+    // thread 2 that may parse incorrectly. Needs retries until it is
+    // able to parse everything.
     auto rf = [&]() {
         Seeker seeker(content, 0, content.size);
         std::chrono::time_point<std::chrono::system_clock> start_T = std::chrono::system_clock::now();
         for (int i = startCheck; i <= endCheck; i++) {
             seeker.curr = i;
             seeker.end = content.size;
+
+            //checks valid start by checking if field_id and wiretypes exist
             if (pbs->checkValidStart(seeker)) {
+                // used for testing, in actual implementation
+                // this would be unnecessary as we will not traverse through
+                // to get this info
+                //
+                // for this if to be true, it would be a coincidence
+                // which would be a false positive valid start
                 if (st.count(i) == 0) {
                     print("invalid at", i);
                     uint32_t tag = seeker.ReadTag();
@@ -99,8 +111,12 @@ int main() {
         std::chrono::duration<double> elapsed_seconds = end_T - start_T;
         std::cout << "time2: " << elapsed_seconds.count() << "s\n";
     };
-
-    parlay::par_do(lf, rf);
+    // TODO
+    std::thread thread1(lf);
+    std::thread thread2(rf);
+    thread1.join();
+    thread2.join();
+    // parlay::par_do(lf, rf);
     start2 = std::chrono::system_clock::now();
     pbs->MergeParallel();
     end2 = std::chrono::system_clock::now();

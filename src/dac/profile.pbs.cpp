@@ -1019,8 +1019,15 @@ bool Profile::checkValidStart(Seeker& seek) {
             if (wire == 2) {
                 if (!seek.ReadVarint32(&len)) return false;
                 seek.Skip(len);
+                //may be unnecessary to skip, can just try to parse right away
+                //init thought is if it can read tag and skip this length
+                //10 times in a row, then it is a safe start, however
+                //a hard check is still necessary to know if the read tag is valid
+                //in fact, we won't know if it's valid unless thread1's end pt is thread2's starting pt
                 if (succskip > succskiplim) {
                     seek.curr = seek_init;
+                    //probably better to do
+                    //this hard check instead of skipping check
                     bool hardcheck = checkValidStartHard(seek);
                     // print("hardcheck at", seek_init, hardcheck);
                     return hardcheck;

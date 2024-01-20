@@ -1,3 +1,5 @@
+# turns generates code that turns PBS message to Google's PB message
+# used for testing the correctness of PBS parsing. 
 import os
 import sys
 import re
